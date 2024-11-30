@@ -130,8 +130,8 @@ docker run -p 8080:8080 gobarbercrm
 ## 🔗 Ссылки
 
 - 📚 [Документация API (Swagger)](http://localhost:8080/swagger/index.html)
-- 📂 [GitHub Repository](https://github.com/your-repo/gobarbercrm)
-- 🐋 [Docker Hub](https://hub.docker.com/repository/docker/your-repo/gobarbercrm)
+- 📂 [GitHub Repository](https://github.com/0sokrat0/GoBarberCRM-API)
+
 
 ---
 
