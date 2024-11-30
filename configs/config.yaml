@@ -1,0 +1,12 @@
+app:
+  name: "GoBarberCRM API"
+  environment: "development"
+  port: 8080
+
+database:
+  host: "localhost"
+  port: 5432
+  user: "postgres"
+  password: "3215"
+  name: "GoBarberCRM"
+  sslmode: "disable"

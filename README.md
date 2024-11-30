@@ -1,5 +1,8 @@
 
 # ✂️ GoBarberCRM API
+---
+![alt text](pkg/utils/image.png) 
+---
 
 ![Go](https://img.shields.io/badge/Go-v1.20-blue?style=flat-square&logo=go)
 ![Gin](https://img.shields.io/badge/Gin-Framework-blueviolet?style=flat-square)
