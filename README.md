@@ -1,17 +1,22 @@
 
 # ✂️ GoBarberCRM API
----
-![alt text](pkg/utils/image.png) 
+
 ---
 
-![Go](https://img.shields.io/badge/Go-v1.20-blue?style=flat-square&logo=go)
+<p align="center">
+  <img src="pkg/utils/gopher.png" alt="Gopher Logo" width="200"/>
+</p>
+
+---
+
+![Go](https://img.shields.io/badge/Go-v1.23-blue?style=flat-square&logo=go)
 ![Gin](https://img.shields.io/badge/Gin-Framework-blueviolet?style=flat-square)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-v14-blue?style=flat-square&logo=postgresql)
 ![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=flat-square&logo=docker)
 ![Swagger](https://img.shields.io/badge/Swagger-API%20Docs-green?style=flat-square&logo=swagger)
 
 [![GitHub](https://img.shields.io/badge/GitHub-GoBarberCRM-black?style=for-the-badge&logo=github)](https://github.com/0sokrat0/GoBarberCRM-API)
-[![Telegram](https://img.shields.io/badge/Telegram-Community-blue?style=for-the-badge&logo=telegram)](https://t.me/SOKRAT_00)
+[![Telegram](https://img.shields.io/badge/Telegram-sokrat_00-blue?style=for-the-badge&logo=telegram)](https://t.me/SOKRAT_00)
 
 GoBarberCRM API — это высокопроизводительный backend API для управления системой CRM в барбершопах. Он предоставляет удобные инструменты для работы с клиентами, расписанием, бронированием услуг и уведомлениями.
 
@@ -48,27 +53,32 @@ GoBarberCRM API — это высокопроизводительный backend 
 ├── cmd/
 │   └── main.go                 # Главный файл запуска API
 ├── configs/
-│   └── configs.go              # Настройки приложения
+│   ├── configs.go              # Настройки приложения
+│   └── config.yaml             # Конфигурационный файл
 ├── docs/                       # Документация API (Swagger, OpenAPI)
 ├── internal/                   # Основная логика приложения
-│   ├── appointments/           # Работа с бронированиями
-│   ├── clienthistory/          # История клиентов
+│   ├── bookings/               # Работа с бронированиями
+│   ├── breaks/                 # Перерывы сотрудников
 │   ├── clients/                # Управление клиентами
-│   ├── department/             # Филиалы/отделы
+│   ├── history_log/            # История изменений
 │   ├── notifications/          # Уведомления
 │   ├── schedules/              # Расписания сотрудников
 │   ├── services/               # Управление услугами
 │   └── users/                  # Управление пользователями
-└── pkg/                        # Общие пакеты
-    ├── db/                     # Подключение к базе данных
-    ├── logger/                 # Логирование
-    └── utils/                  # Вспомогательные функции
+├── pkg/                        # Общие пакеты
+│   ├── db/                     # Подключение и модели базы данных
+│   ├── logger/                 # Логирование
+│   └── utils/                  # Вспомогательные функции
+└── README.md                   # Документация проекта
 ```
+
 ---
 
 ## 📂 Структура БД
 
-![alt text](pkg/utils/APiGO.png) 
+<p align="center">
+  <img src="pkg/utils/APiGO.png" alt="API Database Structure" width="600"/>
+</p>
 
 ---
 
@@ -81,6 +91,7 @@ GoBarberCRM API — это высокопроизводительный backend 
 ## 🛠 Установка и запуск
 
 ### 1. Установка зависимостей
+
 Убедитесь, что у вас установлен Go, Docker и PostgreSQL.
 
 ```bash
@@ -105,12 +116,14 @@ jwt:
 
 ### 3. Запуск проекта
 
-#### Локальный запуск:
+#### Локальный запуск
+
 ```bash
 go run cmd/main.go
 ```
 
-#### Через Docker:
+#### Через Docker
+
 ```bash
 docker build -t gobarbercrm .
 docker run -p 8080:8080 gobarbercrm
@@ -135,24 +148,30 @@ docker run -p 8080:8080 gobarbercrm
 - 📚 [Документация API (Swagger)](http://localhost:8080/swagger/index.html)
 - 📂 [GitHub Repository](https://github.com/0sokrat0/GoBarberCRM-API)
 
-
 ---
 
 ## 🤝 Вклад в проект
 
 1. Форкните репозиторий.
 2. Создайте ветку для своих изменений:
+
    ```bash
    git checkout -b feature/YourFeature
    ```
+
 3. Сделайте коммит с изменениями:
+
    ```bash
    git commit -m "Add YourFeature"
    ```
+
 4. Отправьте изменения:
+
    ```bash
    git push origin feature/YourFeature
    ```
+
 5. Откройте Pull Request.
 
 ---
+
