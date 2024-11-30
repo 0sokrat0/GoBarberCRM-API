@@ -36,6 +36,8 @@ func LoadConfig(path string) (*Config, error) {
 	viper.AddConfigPath(path)     // Путь к файлу конфигурации
 	viper.AutomaticEnv()          // Поддержка переменных окружения
 
+	BindEnvVariables() // Привязываем переменные окружения
+
 	// Читаем файл конфигурации
 	if err := viper.ReadInConfig(); err != nil {
 		return nil, fmt.Errorf("error reading config file: %w", err)
@@ -50,4 +52,48 @@ func LoadConfig(path string) (*Config, error) {
 	log.Println("Configuration loaded successfully.")
 	AppConfigInstance = &config
 	return &config, nil
+}
+
+// BindEnvVariables привязывает ключи конфигурации к переменным окружения
+func BindEnvVariables() {
+	viper.BindEnv("database.user", "DB_USER")
+	viper.BindEnv("database.password", "DB_PASSWORD")
+	viper.BindEnv("database.host", "DB_HOST")
+	viper.BindEnv("database.port", "DB_PORT")
+	viper.BindEnv("database.name", "DB_NAME")
+	viper.BindEnv("database.sslmode", "DB_SSLMODE")
+	viper.BindEnv("app.port", "APP_PORT")
+	viper.BindEnv("app.environment", "APP_ENVIRONMENT")
+}
+
+// GetDSN формирует строку подключения к базе данных
+func GetDSN(config DatabaseConfig) string {
+	return fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=%s",
+		config.Host,
+		config.Port,
+		config.User,
+		config.Password,
+		config.Name,
+		config.SslMode,
+	)
+}
+
+// TestConfig проверяет загрузку конфигурации
+func TestConfig() {
+	config, err := LoadConfig("./configs")
+	if err != nil {
+		log.Fatalf("Failed to load config: %v", err)
+	}
+
+	log.Printf("App Name: %s, Environment: %s, Port: %d",
+		config.App.Name,
+		config.App.Environment,
+		config.App.Port,
+	)
+
+	log.Printf("Database Host: %s, User: %s, DB Name: %s",
+		config.Database.Host,
+		config.Database.User,
+		config.Database.Name,
+	)
 }
