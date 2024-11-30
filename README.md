@@ -7,8 +7,8 @@
 ![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=flat-square&logo=docker)
 ![Swagger](https://img.shields.io/badge/Swagger-API%20Docs-green?style=flat-square&logo=swagger)
 
-[![GitHub](https://img.shields.io/badge/GitHub-GoBarberCRM-black?style=for-the-badge&logo=github)](https://github.com/your-repo/gobarbercrm)
-[![Telegram](https://img.shields.io/badge/Telegram-Community-blue?style=for-the-badge&logo=telegram)](https://t.me/your_telegram_channel)
+[![GitHub](https://img.shields.io/badge/GitHub-GoBarberCRM-black?style=for-the-badge&logo=github)](https://github.com/0sokrat0/GoBarberCRM-API)
+[![Telegram](https://img.shields.io/badge/Telegram-Community-blue?style=for-the-badge&logo=telegram)](https://t.me/SOKRAT_00)
 
 GoBarberCRM API — это высокопроизводительный backend API для управления системой CRM в барбершопах. Он предоставляет удобные инструменты для работы с клиентами, расписанием, бронированием услуг и уведомлениями.
 
