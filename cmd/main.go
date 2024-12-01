@@ -20,7 +20,6 @@ func main() {
 	dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=%s",
 		cfg.Database.Host, cfg.Database.Port, cfg.Database.User, cfg.Database.Password, cfg.Database.Name, cfg.Database.SslMode,
 	)
-
 	log.Printf("Connecting to database: %s", dsn)
 
 	// Инициализируем базу данных
@@ -34,7 +33,6 @@ func main() {
 		}
 	}()
 
-	// Настраиваем маршрутизатор
 	router := routes.SetupRouter()
 
 	// Запускаем сервер
