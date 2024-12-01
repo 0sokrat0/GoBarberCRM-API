@@ -34,11 +34,13 @@ func SetupRouter() *gin.Engine {
 
 	clientsRoutes := router.Group("/clients") // Группа маршрутов для клиентов
 	{
-		clientsRoutes.POST("/", clients.CreateClientHandler)      // Создание клиента
-		clientsRoutes.GET("/", clients.GetAllClientsHandler)      // Получение всех клиентов
-		clientsRoutes.GET("/:id", clients.GetClientHandler)       // Получение клиента по ID
-		clientsRoutes.PUT("/:id", clients.UpdateClientHandler)    // Обновление клиента
-		clientsRoutes.DELETE("/:id", clients.DeleteClientHandler) // Удаление клиента
+		clientsRoutes.POST("/", clients.CreateClientHandler)                                // Создание клиента
+		clientsRoutes.GET("/clients/telegram/:tg_id", clients.GetClientByTelegramIDHandler) // Поиск по Telegram ID
+		clientsRoutes.GET("/clients/filter", clients.FilterClientsByNameHandler)            // Фильтрация по имени
+		clientsRoutes.GET("/", clients.GetAllClientsHandler)                                // Получение всех клиентов
+		clientsRoutes.GET("/:id", clients.GetClientHandler)                                 // Получение клиента по ID
+		clientsRoutes.PUT("/:id", clients.UpdateClientHandler)                              // Обновление клиента
+		clientsRoutes.DELETE("/:id", clients.DeleteClientHandler)                           // Удаление клиента
 	}
 
 	bookingsRoutes := router.Group("/bookings") // Группа маршрутов для бронирований

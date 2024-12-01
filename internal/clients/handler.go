@@ -89,3 +89,27 @@ func DeleteClientHandler(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "client deleted successfully"})
 }
+
+func GetClientByTelegramIDHandler(c *gin.Context) {
+	tgID := c.Param("tg_id")
+
+	var client models.Clients
+	if err := db.DB.Where("tg_id = ?", tgID).First(&client).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "client with this Telegram ID not found"})
+		return
+	}
+
+	c.JSON(http.StatusOK, client)
+}
+
+func FilterClientsByNameHandler(c *gin.Context) {
+	name := c.Query("name")
+
+	var clients []models.Clients
+	if err := db.DB.Where("first_name ILIKE ? OR last_name ILIKE ?", "%"+name+"%", "%"+name+"%").Find(&clients).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to filter clients"})
+		return
+	}
+
+	c.JSON(http.StatusOK, clients)
+}
