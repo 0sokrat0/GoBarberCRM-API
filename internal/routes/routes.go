@@ -1,6 +1,8 @@
 package routes
 
 import (
+	"net/http"
+
 	"github.com/0sokrat0/GoGRAFFApi.git/internal/bookings"
 	"github.com/0sokrat0/GoGRAFFApi.git/internal/breaks"
 	"github.com/0sokrat0/GoGRAFFApi.git/internal/clients"
@@ -8,83 +10,128 @@ import (
 	"github.com/0sokrat0/GoGRAFFApi.git/internal/schedules"
 	"github.com/0sokrat0/GoGRAFFApi.git/internal/services"
 	"github.com/0sokrat0/GoGRAFFApi.git/internal/users"
+	"github.com/0sokrat0/GoGRAFFApi.git/pkg/middleware"
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-// SetupRouter создает маршруты для приложения
+// SetupRouter initializes the Gin router and API routes
 func SetupRouter() *gin.Engine {
 	router := gin.Default()
 
-	// Маршрут для проверки работоспособности API
+	// Middleware
+	router.Use(middleware.RequestLogger())
+	router.Use(middleware.CORSMiddleware())
+
+	// Base Routes
 	router.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"message": "pong",
 		})
 	})
 
-	// Маршруты для пользователей
+	// Swagger
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
+	// Routes
+	setupUserRoutes(router)
+	setupClientRoutes(router)
+	setupBookingRoutes(router)
+	setupServiceRoutes(router)
+	setupScheduleRoutes(router)
+	setupBreakRoutes(router)
+	setupNotificationRoutes(router)
+
+	return router
+}
+
+func setupUserRoutes(router *gin.Engine) {
 	userRoutes := router.Group("/users")
 	{
-		userRoutes.POST("/", users.CreateUserHandler)      // Создание пользователя
-		userRoutes.GET("/", users.GetAllUsersHandler)      // Получение всех пользователей
-		userRoutes.GET("/:id", users.GetUserHandler)       // Получение пользователя по ID
-		userRoutes.PUT("/:id", users.UpdateUserHandler)    // Обновление пользователя
-		userRoutes.DELETE("/:id", users.DeleteUserHandler) // Удаление пользователя
+		userRoutes.POST("/", users.CreateUserHandler)
+		userRoutes.GET("/", users.GetAllUsersHandler)
+		userRoutes.GET("/:id", users.GetUserHandler)
+		userRoutes.PUT("/:id", users.UpdateUserHandler)
+		userRoutes.DELETE("/:id", users.DeleteUserHandler)
 	}
+}
 
-	clientsRoutes := router.Group("/clients") // Группа маршрутов для клиентов
+func setupClientRoutes(router *gin.Engine) {
+	clientRoutes := router.Group("/clients")
 	{
-		clientsRoutes.POST("/", clients.CreateClientHandler)                                // Создание клиента
-		clientsRoutes.GET("/clients/telegram/:tg_id", clients.GetClientByTelegramIDHandler) // Поиск по Telegram ID
-		clientsRoutes.GET("/clients/filter", clients.FilterClientsByNameHandler)            // Фильтрация по имени
-		clientsRoutes.GET("/", clients.GetAllClientsHandler)                                // Получение всех клиентов
-		clientsRoutes.GET("/:id", clients.GetClientHandler)                                 // Получение клиента по ID
-		clientsRoutes.PUT("/:id", clients.UpdateClientHandler)                              // Обновление клиента
-		clientsRoutes.DELETE("/:id", clients.DeleteClientHandler)                           // Удаление клиента
+		clientRoutes.POST("/", clients.CreateClientHandler)
+		clientRoutes.GET("/", clients.GetAllClientsHandler)
+		clientRoutes.GET("/telegram/:tg_id", clients.GetClientByTelegramIDHandler)
+		clientRoutes.GET("/filter", clients.FilterClientsByNameHandler)
+		clientRoutes.GET("/:id", clients.GetClientHandler)
+		clientRoutes.PUT("/:id", clients.UpdateClientHandler)
+		clientRoutes.DELETE("/:id", clients.DeleteClientHandler)
+		clientRoutes.POST("/quick_add", clients.QuickAddClientHandler)
+		clientRoutes.GET("/search", clients.SearchClientHandler)
+		clientRoutes.GET("/check", clients.CheckClientExistenceHandler)
 	}
+}
 
-	bookingsRoutes := router.Group("/bookings") // Группа маршрутов для бронирований
+func setupBookingRoutes(router *gin.Engine) {
+	bookingRoutes := router.Group("/bookings")
 	{
-		bookingsRoutes.POST("/", bookings.CreateBookingHandler)      // Создание бронирования
-		bookingsRoutes.GET("/", bookings.GetAllBookingsHandler)      // Получение всех бронирований
-		bookingsRoutes.GET("/:id", bookings.GetBookingHandler)       // Получение бронирования по ID
-		bookingsRoutes.PUT("/:id", bookings.UpdateBookingHandler)    // Обновление бронирования
-		bookingsRoutes.DELETE("/:id", bookings.DeleteBookingHandler) // Удаление бронирования
+		bookingRoutes.POST("/", bookings.CreateBookingHandler)
+		bookingRoutes.GET("/", bookings.GetAllBookingsHandler)
+		bookingRoutes.GET("/:id", bookings.GetBookingHandler)
+		bookingRoutes.PUT("/:id", bookings.UpdateBookingHandler)
+		bookingRoutes.DELETE("/:id", bookings.DeleteBookingHandler)
+		bookingRoutes.GET("/client/:client_id", bookings.GetBookingsByClientHandler)
+		bookingRoutes.GET("/user/:user_id", bookings.GetBookingsByUserHandler)
+		bookingRoutes.GET("/service/:service_id", bookings.GetBookingsByServiceHandler)
+		bookingRoutes.GET("/check", bookings.CheckBookingAvailabilityHandler)
 	}
-	servicesRoutes := router.Group("/services") // Группа маршрутов для сервисов
-	{
-		servicesRoutes.POST("/", services.CreateServiceHandler)      // Создание сервиса
-		servicesRoutes.GET("/", services.GetAllServicesHandler)      // Получение всех сервисов
-		servicesRoutes.GET("/:id", services.GetServiceHandler)       // Получение сервиса по ID
-		servicesRoutes.PUT("/:id", services.UpdateServiceHandler)    // Обновление сервиса
-		servicesRoutes.DELETE("/:id", services.DeleteServiceHandler) // Удаление сервиса
-	}
+}
 
-	schedulesRoutes := router.Group("/schedules") // Группа маршрутов для расписания
+func setupServiceRoutes(router *gin.Engine) {
+	serviceRoutes := router.Group("/services")
 	{
-		schedulesRoutes.POST("/", schedules.CreateScheduleHandler)      // Создание расписания
-		schedulesRoutes.GET("/", schedules.GetAllSchedulesHandler)      // Получение всех расписаний
-		schedulesRoutes.GET("/:id", schedules.GetScheduleHandler)       // Получение расписания по ID
-		schedulesRoutes.PUT("/:id", schedules.UpdateScheduleHandler)    // Обновление расписания
-		schedulesRoutes.DELETE("/:id", schedules.DeleteScheduleHandler) // Удаление расписания
-	}
-	breaksRoutes := router.Group("/breaks") // Группа маршрутов для перерывов
-	{
-		breaksRoutes.POST("/", breaks.CreateBreakHandler)      // Создание перерыва
-		breaksRoutes.GET("/", breaks.GetAllBreaksHandler)      // Получение всех перерывов
-		breaksRoutes.GET("/:id", breaks.GetBreakHandler)       // Получение перерыва по ID
-		breaksRoutes.PUT("/:id", breaks.UpdateBreakHandler)    // Обновление перерыва
-		breaksRoutes.DELETE("/:id", breaks.DeleteBreakHandler) // Удаление перерыва
-	}
-	notificationsRoutes := router.Group("/notifications") // Группа маршрутов для уведомлений клиентов
-	{
-		notificationsRoutes.POST("/", notifications.CreateNotificationHandler)      // Создание уведомления
-		notificationsRoutes.GET("/", notifications.GetAllNotificationsHandler)      // Получение всех уведомлений
-		notificationsRoutes.GET("/:id", notifications.GetNotificationHandler)       // Получение уведомления по ID
-		notificationsRoutes.PUT("/:id", notifications.UpdateNotificationHandler)    // Обновление уведомления
-		notificationsRoutes.DELETE("/:id", notifications.DeleteNotificationHandler) // Удаление уведомления
-	}
+		serviceRoutes.POST("/", services.CreateServiceHandler)
+		serviceRoutes.GET("/", services.GetAllServicesHandler)
+		serviceRoutes.GET("/:id", services.GetServiceHandler)
+		serviceRoutes.PUT("/:id", services.UpdateServiceHandler)
+		serviceRoutes.DELETE("/:id", services.DeleteServiceHandler)
+		serviceRoutes.PUT("/:id/deactivate", services.DeactivateServiceHandler)
 
-	// Добавляй другие группы маршрутов (clients, bookings и т.д.)
-	return router
+	}
+}
+
+func setupScheduleRoutes(router *gin.Engine) {
+	scheduleRoutes := router.Group("/schedules")
+	{
+		scheduleRoutes.POST("/", schedules.CreateScheduleHandler)
+		scheduleRoutes.GET("/", schedules.GetAllSchedulesHandler)
+		scheduleRoutes.GET("/:id", schedules.GetScheduleHandler)
+		scheduleRoutes.PUT("/:id", schedules.UpdateScheduleHandler)
+		scheduleRoutes.DELETE("/:id", schedules.DeleteScheduleHandler)
+		scheduleRoutes.GET("/filter/:id", schedules.FilterSchedulesByUserHandler)
+
+	}
+}
+
+func setupBreakRoutes(router *gin.Engine) {
+	breakRoutes := router.Group("/breaks")
+	{
+		breakRoutes.POST("/", breaks.CreateBreakHandler)
+		breakRoutes.GET("/", breaks.GetAllBreaksHandler)
+		breakRoutes.GET("/:id", breaks.GetBreakHandler)
+		breakRoutes.PUT("/:id", breaks.UpdateBreakHandler)
+		breakRoutes.DELETE("/:id", breaks.DeleteBreakHandler)
+	}
+}
+
+func setupNotificationRoutes(router *gin.Engine) {
+	notificationRoutes := router.Group("/notifications")
+	{
+		notificationRoutes.POST("/", notifications.CreateNotificationHandler)
+		notificationRoutes.GET("/", notifications.GetAllNotificationsHandler)
+		notificationRoutes.GET("/:id", notifications.GetNotificationHandler)
+		notificationRoutes.PUT("/:id", notifications.UpdateNotificationHandler)
+		notificationRoutes.DELETE("/:id", notifications.DeleteNotificationHandler)
+	}
 }

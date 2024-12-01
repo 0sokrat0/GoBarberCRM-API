@@ -1,13 +1,12 @@
 package models
 
-import "gorm.io/gorm"
+import "time"
 
 type Breaks struct {
-	gorm.Model
-	ID         uint   `gorm:"primaryKey" json:"id"`             // Уникальный идентификатор перерыва
-	UserID     uint   `gorm:"not null" json:"user_id"`          // Ссылка на сотрудника
-	BreakStart string `gorm:"not null" json:"break_start"`      // Время начала перерыва
-	BreakEnd   string `gorm:"not null" json:"break_end"`        // Время окончания перерыва
-	CreatedAt  string `gorm:"autoCreateTime" json:"created_at"` // Дата создания
-	UpdatedAt  string `gorm:"autoUpdateTime" json:"updated_at"` // Дата последнего обновления
+	ID         uint      `gorm:"primaryKey" json:"id"`
+	UserID     uint      `gorm:"not null;index" json:"user_id"`
+	BreakStart time.Time `gorm:"not null" json:"break_start"`
+	BreakEnd   time.Time `gorm:"not null" json:"break_end"`
+	CreatedAt  time.Time `gorm:"autoCreateTime" json:"created_at"`
+	UpdatedAt  time.Time `gorm:"autoUpdateTime" json:"updated_at"`
 }

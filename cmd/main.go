@@ -5,10 +5,16 @@ import (
 	"log"
 
 	"github.com/0sokrat0/GoGRAFFApi.git/configs"
+	_ "github.com/0sokrat0/GoGRAFFApi.git/docs"
 	"github.com/0sokrat0/GoGRAFFApi.git/internal/routes"
 	"github.com/0sokrat0/GoGRAFFApi.git/pkg/db"
 )
 
+// @title GoGRAFF API
+// @version 1.0
+// @description API для управления GoGRAFF
+// @host localhost:8080
+// @BasePath /
 func main() {
 	// Загружаем конфигурацию
 	cfg, err := configs.LoadConfig("./configs")

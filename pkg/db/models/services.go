@@ -1,11 +1,14 @@
 package models
 
+import "time"
+
 type Services struct {
-	ID          uint    `gorm:"primaryKey" json:"id"`             // Уникальный идентификатор услуги
-	Name        string  `gorm:"size:255;not null" json:"name"`    // Название услуги
-	Description string  `gorm:"type:text" json:"description"`     // Описание услуги
-	Price       float64 `gorm:"not null" json:"price"`            // Цена услуги
-	Duration    int     `gorm:"not null" json:"duration"`         // Продолжительность услуги (в минутах)
-	CreatedAt   string  `gorm:"autoCreateTime" json:"created_at"` // Дата создания
-	UpdatedAt   string  `gorm:"autoUpdateTime" json:"updated_at"` // Дата последнего обновления
+	ID          uint      `gorm:"primaryKey" json:"id"`
+	Name        string    `gorm:"size:255;not null" json:"name"`
+	Description string    `gorm:"type:text" json:"description"`
+	Price       float64   `gorm:"not null" json:"price"`
+	Duration    int       `gorm:"not null" json:"duration"`
+	IsActive    bool      `gorm:"default:true" json:"is_active"`
+	CreatedAt   time.Time `gorm:"autoCreateTime" json:"created_at"`
+	UpdatedAt   time.Time `gorm:"autoUpdateTime" json:"updated_at"`
 }

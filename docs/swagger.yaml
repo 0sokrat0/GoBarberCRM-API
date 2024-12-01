@@ -1,0 +1,1403 @@
+basePath: /
+definitions:
+  models.Bookings:
+    properties:
+      booking_time:
+        type: string
+      client:
+        $ref: '#/definitions/models.Clients'
+      client_id:
+        type: integer
+      created_at:
+        type: string
+      id:
+        type: integer
+      service:
+        $ref: '#/definitions/models.Services'
+      service_id:
+        type: integer
+      status:
+        type: string
+      updated_at:
+        type: string
+      user:
+        $ref: '#/definitions/models.Users'
+      user_id:
+        type: integer
+    type: object
+  models.Breaks:
+    properties:
+      break_end:
+        type: string
+      break_start:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: integer
+      updated_at:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  models.Clients:
+    properties:
+      created_at:
+        description: Created At
+        type: string
+      email:
+        description: Email
+        type: string
+      first_name:
+        description: First Name
+        type: string
+      id:
+        description: ID
+        type: integer
+      last_name:
+        description: Last Name
+        type: string
+      phone_number:
+        description: Phone Number
+        type: string
+      tg_id:
+        description: Telegram ID
+        type: integer
+      tg_nickname:
+        description: Telegram Nickname
+        type: string
+      updated_at:
+        description: Updated At
+        type: string
+    type: object
+  models.Schedules:
+    properties:
+      created_at:
+        description: Дата создания
+        type: string
+      end_time:
+        description: Время окончания рабочего дня
+        type: string
+      id:
+        description: Уникальный идентификатор расписания
+        type: integer
+      schedule_day:
+        description: День недели (например, понедельник)
+        type: string
+      start_time:
+        description: Время начала рабочего дня
+        type: string
+      updated_at:
+        description: Дата последнего обновления
+        type: string
+      user_id:
+        description: Ссылка на сотрудника
+        type: integer
+    type: object
+  models.Services:
+    properties:
+      created_at:
+        type: string
+      description:
+        type: string
+      duration:
+        type: integer
+      id:
+        type: integer
+      is_active:
+        type: boolean
+      name:
+        type: string
+      price:
+        type: number
+      updated_at:
+        type: string
+    type: object
+  models.Users:
+    properties:
+      created_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      last_login_at:
+        type: string
+      password_hash:
+        type: string
+      phone_number:
+        type: string
+      role:
+        type: string
+      updated_at:
+        type: string
+      username:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API для управления GoGRAFF
+  title: GoGRAFF API
+  version: "1.0"
+paths:
+  /bookings:
+    get:
+      description: Получает список всех бронирований
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Bookings'
+            type: array
+        "500":
+          description: Ошибка сервера
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Получить все бронирования
+      tags:
+      - Бронирования
+    post:
+      consumes:
+      - application/json
+      description: Создает новое бронирование, если слот времени не занят
+      parameters:
+      - description: Данные бронирования
+        in: body
+        name: booking
+        required: true
+        schema:
+          $ref: '#/definitions/models.Bookings'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Bookings'
+        "400":
+          description: Некорректный запрос
+          schema:
+            additionalProperties: true
+            type: object
+        "409":
+          description: Слот времени уже занят
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Ошибка сервера
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Создать бронирование
+      tags:
+      - Бронирования
+  /bookings/{id}:
+    delete:
+      description: Удаляет бронирование по ID
+      parameters:
+      - description: ID бронирования
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: Сообщение об успешном удалении
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Некорректный ID
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Ошибка сервера
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Удалить бронирование
+      tags:
+      - Бронирования
+    get:
+      description: Получает бронирование по ID
+      parameters:
+      - description: ID бронирования
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Bookings'
+        "400":
+          description: Некорректный ID
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Бронирование не найдено
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Получить бронирование
+      tags:
+      - Бронирования
+    put:
+      consumes:
+      - application/json
+      description: Обновляет данные бронирования по ID
+      parameters:
+      - description: ID бронирования
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Обновленные данные бронирования
+        in: body
+        name: booking
+        required: true
+        schema:
+          $ref: '#/definitions/models.Bookings'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Bookings'
+        "400":
+          description: Некорректный запрос
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Бронирование не найдено
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Ошибка сервера
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Обновить бронирование
+      tags:
+      - Бронирования
+  /bookings/availability:
+    get:
+      description: Проверяет, доступен ли временной слот для пользователя
+      parameters:
+      - description: ID пользователя
+        in: query
+        name: user_id
+        required: true
+        type: integer
+      - description: Время бронирования
+        in: query
+        name: booking_time
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Доступность слота
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Некорректный запрос
+          schema:
+            additionalProperties: true
+            type: object
+        "409":
+          description: Слот времени уже занят
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Проверить доступность бронирования
+      tags:
+      - Бронирования
+  /bookings/client/{client_id}:
+    get:
+      description: Получает список бронирований по ID клиента
+      parameters:
+      - description: ID клиента
+        in: path
+        name: client_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Bookings'
+            type: array
+        "400":
+          description: Некорректный ID клиента
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Ошибка сервера
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Получить бронирования клиента
+      tags:
+      - Бронирования
+  /bookings/service/{service_id}:
+    get:
+      description: Получает список бронирований по ID услуги
+      parameters:
+      - description: ID услуги
+        in: path
+        name: service_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Bookings'
+            type: array
+        "400":
+          description: Некорректный ID услуги
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Ошибка сервера
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Получить бронирования услуги
+      tags:
+      - Бронирования
+  /bookings/user/{user_id}:
+    get:
+      description: Получает список бронирований по ID пользователя
+      parameters:
+      - description: ID пользователя
+        in: path
+        name: user_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Bookings'
+            type: array
+        "400":
+          description: Некорректный ID пользователя
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Ошибка сервера
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Получить бронирования пользователя
+      tags:
+      - Бронирования
+  /breaks:
+    get:
+      description: Возвращает список всех перерывов
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Breaks'
+            type: array
+        "500":
+          description: Ошибка сервера
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Получить все перерывы
+      tags:
+      - Перерывы
+    post:
+      consumes:
+      - application/json
+      description: Создает новый перерыв
+      parameters:
+      - description: Данные перерыва
+        in: body
+        name: break
+        required: true
+        schema:
+          $ref: '#/definitions/models.Breaks'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Breaks'
+        "400":
+          description: Некорректный запрос
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Ошибка сервера
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Создать перерыв
+      tags:
+      - Перерывы
+  /breaks/{id}:
+    delete:
+      description: Удаляет перерыв по ID
+      parameters:
+      - description: ID перерыва
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: Сообщение об успешном удалении
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Некорректный запрос
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Ошибка сервера
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Удалить перерыв
+      tags:
+      - Перерывы
+    get:
+      description: Возвращает данные перерыва по ID
+      parameters:
+      - description: ID перерыва
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Breaks'
+        "400":
+          description: Некорректный запрос
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Перерыв не найден
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Получить перерыв
+      tags:
+      - Перерывы
+    put:
+      consumes:
+      - application/json
+      description: Обновляет данные перерыва по ID
+      parameters:
+      - description: ID перерыва
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Обновленные данные перерыва
+        in: body
+        name: break
+        required: true
+        schema:
+          $ref: '#/definitions/models.Breaks'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Breaks'
+        "400":
+          description: Некорректный запрос
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Перерыв не найден
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Ошибка сервера
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Обновить перерыв
+      tags:
+      - Перерывы
+  /clients:
+    get:
+      description: Возвращает список всех клиентов
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Clients'
+            type: array
+        "500":
+          description: Ошибка сервера
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Получить всех клиентов
+      tags:
+      - Клиенты
+    post:
+      consumes:
+      - application/json
+      description: Создает нового клиента
+      parameters:
+      - description: Данные клиента
+        in: body
+        name: client
+        required: true
+        schema:
+          $ref: '#/definitions/models.Clients'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Clients'
+        "400":
+          description: Некорректный запрос
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Ошибка сервера
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Создать клиента
+      tags:
+      - Клиенты
+  /clients/{id}:
+    delete:
+      description: Удаляет клиента по ID
+      parameters:
+      - description: ID клиента
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: Сообщение об успешном удалении
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Некорректный запрос
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Ошибка сервера
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Удалить клиента
+      tags:
+      - Клиенты
+    get:
+      description: Возвращает данные клиента по ID
+      parameters:
+      - description: ID клиента
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Clients'
+        "400":
+          description: Некорректный запрос
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Клиент не найден
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Получить клиента
+      tags:
+      - Клиенты
+    put:
+      consumes:
+      - application/json
+      description: Обновляет данные клиента по ID
+      parameters:
+      - description: ID клиента
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Обновленные данные клиента
+        in: body
+        name: client
+        required: true
+        schema:
+          $ref: '#/definitions/models.Clients'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Clients'
+        "400":
+          description: Некорректный запрос
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Клиент не найден
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Ошибка сервера
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Обновить клиента
+      tags:
+      - Клиенты
+  /clients/check:
+    get:
+      description: Проверяет, существует ли клиент с заданными контактными данными
+      parameters:
+      - description: Номер телефона клиента
+        in: query
+        name: phone_number
+        type: string
+      - description: Telegram ID клиента
+        in: query
+        name: tg_id
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Результат проверки
+          schema:
+            additionalProperties:
+              type: boolean
+            type: object
+        "400":
+          description: Некорректный запрос
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Проверить существование клиента
+      tags:
+      - Клиенты
+  /clients/filter:
+    get:
+      description: Возвращает список клиентов по имени
+      parameters:
+      - description: Имя клиента для фильтрации
+        in: query
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Clients'
+            type: array
+        "500":
+          description: Ошибка сервера
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Фильтрация клиентов по имени
+      tags:
+      - Клиенты
+  /clients/quick_add:
+    post:
+      consumes:
+      - application/json
+      description: Создает клиента с минимальными данными (например, через Telegram
+        и/или номер телефона)
+      parameters:
+      - description: Минимальные данные клиента
+        in: body
+        name: client
+        required: true
+        schema:
+          $ref: '#/definitions/models.Clients'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Clients'
+        "400":
+          description: Некорректный запрос
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Ошибка сервера
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Быстрое добавление клиента
+      tags:
+      - Клиенты
+  /clients/search:
+    get:
+      description: Ищет клиента по Email или номеру телефона
+      parameters:
+      - description: Email клиента
+        in: query
+        name: email
+        type: string
+      - description: Номер телефона клиента
+        in: query
+        name: phone
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Clients'
+        "400":
+          description: Некорректный запрос
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Клиент не найден
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Найти клиента по контактным данным
+      tags:
+      - Клиенты
+  /clients/telegram/{tg_id}:
+    get:
+      description: Возвращает данные клиента по Telegram ID
+      parameters:
+      - description: Telegram ID клиента
+        in: path
+        name: tg_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Clients'
+        "404":
+          description: Клиент не найден
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Получить клиента по Telegram ID
+      tags:
+      - Клиенты
+  /schedules:
+    get:
+      description: Возвращает список всех расписаний
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Schedules'
+            type: array
+        "500":
+          description: Ошибка сервера
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Получить все расписания
+      tags:
+      - Расписания
+    post:
+      consumes:
+      - application/json
+      description: Создает новое расписание
+      parameters:
+      - description: Данные расписания
+        in: body
+        name: schedule
+        required: true
+        schema:
+          $ref: '#/definitions/models.Schedules'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Schedules'
+        "400":
+          description: Некорректный запрос
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Ошибка сервера
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Создать расписание
+      tags:
+      - Расписания
+  /schedules/{id}:
+    delete:
+      description: Удаляет расписание по ID
+      parameters:
+      - description: ID расписания
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: Сообщение об успешном удалении
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Некорректный запрос
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Ошибка сервера
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Удалить расписание
+      tags:
+      - Расписания
+    get:
+      description: Возвращает данные расписания по ID
+      parameters:
+      - description: ID расписания
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Schedules'
+        "400":
+          description: Некорректный запрос
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Расписание не найдено
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Получить расписание
+      tags:
+      - Расписания
+    put:
+      consumes:
+      - application/json
+      description: Обновляет данные расписания по ID
+      parameters:
+      - description: ID расписания
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Обновленные данные расписания
+        in: body
+        name: schedule
+        required: true
+        schema:
+          $ref: '#/definitions/models.Schedules'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Schedules'
+        "400":
+          description: Некорректный запрос
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Расписание не найдено
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Ошибка сервера
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Обновить расписание
+      tags:
+      - Расписания
+  /schedules/filter:
+    get:
+      description: Возвращает расписания для указанного пользователя
+      parameters:
+      - description: ID пользователя
+        in: query
+        name: user_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Schedules'
+            type: array
+        "400":
+          description: Некорректный запрос
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Ошибка сервера
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Фильтрация расписаний по пользователю
+      tags:
+      - Расписания
+  /services:
+    get:
+      description: Возвращает список всех услуг
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Services'
+            type: array
+        "500":
+          description: Ошибка сервера
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Получить все услуги
+      tags:
+      - Услуги
+    post:
+      consumes:
+      - application/json
+      description: Создает новую услугу
+      parameters:
+      - description: Данные услуги
+        in: body
+        name: service
+        required: true
+        schema:
+          $ref: '#/definitions/models.Services'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Services'
+        "400":
+          description: Некорректный запрос
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Ошибка сервера
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Создать услугу
+      tags:
+      - Услуги
+  /services/{id}:
+    delete:
+      description: Удаляет услугу по ID
+      parameters:
+      - description: ID услуги
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: Сообщение об успешном удалении
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Некорректный запрос
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Ошибка сервера
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Удалить услугу
+      tags:
+      - Услуги
+    get:
+      description: Возвращает данные услуги по ID
+      parameters:
+      - description: ID услуги
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Services'
+        "400":
+          description: Некорректный запрос
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Услуга не найдена
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Получить услугу
+      tags:
+      - Услуги
+    put:
+      consumes:
+      - application/json
+      description: Обновляет данные услуги по ID
+      parameters:
+      - description: ID услуги
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Обновленные данные услуги
+        in: body
+        name: service
+        required: true
+        schema:
+          $ref: '#/definitions/models.Services'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Services'
+        "400":
+          description: Некорректный запрос
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Услуга не найдена
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Ошибка сервера
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Обновить услугу
+      tags:
+      - Услуги
+  /services/{id}/deactivate:
+    put:
+      description: Помечает услугу как неактивную
+      parameters:
+      - description: ID услуги
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: Сообщение об успешной деактивации
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Некорректный запрос
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Ошибка сервера
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Деактивировать услугу
+      tags:
+      - Услуги
+  /users:
+    get:
+      description: Возвращает список всех пользователей
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Users'
+            type: array
+        "500":
+          description: Ошибка сервера
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Получить всех пользователей
+      tags:
+      - Пользователи
+    post:
+      consumes:
+      - application/json
+      description: Создает нового пользователя
+      parameters:
+      - description: Данные пользователя
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.Users'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Users'
+        "400":
+          description: Некорректный запрос
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Ошибка сервера
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Создать пользователя
+      tags:
+      - Пользователи
+  /users/{id}:
+    delete:
+      description: Удаляет пользователя
+      parameters:
+      - description: ID пользователя
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: Сообщение об успешном удалении
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Некорректный запрос
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Ошибка сервера
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Удалить пользователя
+      tags:
+      - Пользователи
+    get:
+      description: Возвращает пользователя по ID
+      parameters:
+      - description: ID пользователя
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Users'
+        "400":
+          description: Некорректный запрос
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Пользователь не найден
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Получить пользователя
+      tags:
+      - Пользователи
+    put:
+      consumes:
+      - application/json
+      description: Обновляет данные пользователя
+      parameters:
+      - description: ID пользователя
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Обновленные данные пользователя
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.Users'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Users'
+        "400":
+          description: Некорректный запрос
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Пользователь не найден
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Ошибка сервера
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Обновить пользователя
+      tags:
+      - Пользователи
+  /users/authenticate:
+    post:
+      consumes:
+      - application/json
+      description: Проверяет email и пароль для аутентификации
+      parameters:
+      - description: Email и пароль
+        in: body
+        name: credentials
+        required: true
+        schema:
+          additionalProperties:
+            type: string
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Сообщение об успешной аутентификации
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Некорректный запрос
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Неверные учетные данные
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Аутентификация пользователя
+      tags:
+      - Пользователи
+swagger: "2.0"

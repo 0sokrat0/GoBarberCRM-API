@@ -4,7 +4,7 @@
 ---
 
 <p align="center">
-  <img src="pkg/utils/gopher.png" alt="Gopher Logo" width="200"/>
+  <img src="pkg/utils/img/gopher.png" alt="Gopher Logo" width="200"/>
 </p>
 
 ---
@@ -77,7 +77,7 @@ GoBarberCRM API — это высокопроизводительный backend 
 ## 📂 Структура БД
 
 <p align="center">
-  <img src="pkg/utils/APiGO.png" alt="API Database Structure" width="600"/>
+  <img src="pkg/utils/img/APiGO.png" alt="API Database Structure" width="600"/>
 </p>
 
 ---
