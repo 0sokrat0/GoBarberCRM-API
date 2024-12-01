@@ -50,26 +50,69 @@ GoBarberCRM API — это высокопроизводительный backend 
 
 ```plaintext
 .
-├── cmd/
-│   └── main.go                 # Главный файл запуска API
-├── configs/
-│   ├── configs.go              # Настройки приложения
-│   └── config.yaml             # Конфигурационный файл
-├── docs/                       # Документация API (Swagger, OpenAPI)
-├── internal/                   # Основная логика приложения
-│   ├── bookings/               # Работа с бронированиями
-│   ├── breaks/                 # Перерывы сотрудников
-│   ├── clients/                # Управление клиентами
-│   ├── history_log/            # История изменений
-│   ├── notifications/          # Уведомления
-│   ├── schedules/              # Расписания сотрудников
-│   ├── services/               # Управление услугами
-│   └── users/                  # Управление пользователями
-├── pkg/                        # Общие пакеты
-│   ├── db/                     # Подключение и модели базы данных
-│   ├── logger/                 # Логирование
-│   └── utils/                  # Вспомогательные функции
-└── README.md                   # Документация проекта
+├── cmd
+│   └── main.go
+├── configs
+│   ├── configs.go
+│   └── config.yaml
+├── docker-compose.yml
+├── Dockerfile
+├── docs
+│   ├── docs.go
+│   ├── swagger.json
+│   └── swagger.yaml
+├── go.mod
+├── go.sum
+├── internal
+│   ├── bookings
+│   │   ├── bookings_test.go
+│   │   └── handler.go
+│   ├── breaks
+│   │   ├── breaks_test.go
+│   │   └── handler.go
+│   ├── clients
+│   │   ├── clients_tast.go
+│   │   └── handler.go
+│   ├── history_log
+│   ├── notifications
+│   │   └── handler.go
+│   ├── routes
+│   │   └── routes.go
+│   ├── schedules
+│   │   ├── handler.go
+│   │   └── schedules_test.go
+│   ├── services
+│   │   ├── handler.go
+│   │   └── services_test.go
+│   └── users
+│       ├── handler.go
+│       └── users_test.go
+├── pkg
+│   ├── db
+│   │   ├── connection.go
+│   │   ├── models
+│   │   │   ├── bookings.go
+│   │   │   ├── breaks.go
+│   │   │   ├── clients.go
+│   │   │   ├── history_log.go
+│   │   │   ├── notifications.go
+│   │   │   ├── schedules.go
+│   │   │   ├── services.go
+│   │   │   └── users.go
+│   │   └── storage
+│   │       └── storage.go
+│   ├── logger
+│   ├── middleware
+│   │   ├── CORSM.go
+│   │   └── RequestLogger.go
+│   └── utils
+│       ├── apiresponse.go
+│       ├── hashpass.go
+│       └── img
+│           ├── APiGO.png
+│           └── gopher.png
+└── README.md
+
 ```
 
 ---

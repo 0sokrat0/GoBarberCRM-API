@@ -1,0 +1,44 @@
+version: "3.9"
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gobarbercrm_api
+    environment:
+      - APP_NAME=GoBarberCRM API
+      - APP_ENV=development
+      - APP_PORT=8080
+      - DB_HOST=database
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=3215
+      - DB_NAME=GoBarberCRM
+      - DB_SSLMODE=disable
+    ports:
+      - "8080:8080" # Пробрасываем порт API наружу
+    depends_on:
+      - database
+    networks:
+      - app_network
+
+  database:
+    image: postgres:15
+    container_name: gobarbercrm_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 3215
+      POSTGRES_DB: GoBarberCRM
+    ports:
+      - "5432:5432" # Пробрасываем порт базы данных наружу (для отладки)
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - app_network
+
+volumes:
+  pg_data: # Сохраняем данные базы между перезапусками контейнеров
+
+networks:
+  app_network: # Общая сеть для всех сервисов
