@@ -8,9 +8,9 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/0sokrat0/GoGRAFFApi.git/internal/schedules"
-	"github.com/0sokrat0/GoGRAFFApi.git/pkg/db"
-	"github.com/0sokrat0/GoGRAFFApi.git/pkg/db/models"
+	"github.com/0sokrat0/GoGRAFFApi.git/app/internal/schedules"
+	"github.com/0sokrat0/GoGRAFFApi.git/app/pkg/db"
+	"github.com/0sokrat0/GoGRAFFApi.git/app/pkg/db/models"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 	"gorm.io/driver/sqlite"

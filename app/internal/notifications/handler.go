@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/0sokrat0/GoGRAFFApi.git/pkg/db"
-	"github.com/0sokrat0/GoGRAFFApi.git/pkg/db/models"
+	"github.com/0sokrat0/GoGRAFFApi.git/app/pkg/db"
+	"github.com/0sokrat0/GoGRAFFApi.git/app/pkg/db/models"
 	"github.com/gin-gonic/gin"
 )
 

@@ -80,7 +80,7 @@ func GetDSN(config DatabaseConfig) string {
 
 // TestConfig проверяет загрузку конфигурации
 func TestConfig() {
-	config, err := LoadConfig("./configs")
+	config, err := LoadConfig("./app/configs")
 	if err != nil {
 		log.Fatalf("Failed to load config: %v", err)
 	}

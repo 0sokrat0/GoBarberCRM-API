@@ -3,15 +3,13 @@ package db
 import (
 	"log"
 
-	"github.com/0sokrat0/GoGRAFFApi.git/pkg/db/models"
+	"github.com/0sokrat0/GoGRAFFApi.git/app/pkg/db/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
-// DB - глобальная переменная для хранения подключения к базе данных
 var DB *gorm.DB
 
-// InitDB - инициализирует базу данных, выполняет миграции
 func InitDB(dsn string) error {
 	var err error
 
@@ -40,7 +38,6 @@ func InitDB(dsn string) error {
 	return nil
 }
 
-// CloseDB закрывает соединение с базой данных
 func CloseDB() error {
 	sqlDB, err := DB.DB()
 	if err != nil {

@@ -4,7 +4,7 @@
 ---
 
 <p align="center">
-  <img src="pkg/utils/img/gopher.png" alt="Gopher Logo" width="200"/>
+  <img src="app/pkg/utils/img/gopher.png" alt="Gopher Logo" width="200"/>
 </p>
 
 ---
@@ -50,69 +50,76 @@ GoBarberCRM API — это высокопроизводительный backend 
 
 ```plaintext
 .
-├── cmd
-│   └── main.go
-├── configs
-│   ├── configs.go
-│   └── config.yaml
+├── app
+│   ├── cmd
+│   │   └── main.go
+│   ├── configs
+│   │   ├── configs.go
+│   │   └── config.yaml
+│   ├── docs
+│   │   ├── docs.go
+│   │   ├── swagger.json
+│   │   └── swagger.yaml
+│   ├── internal
+│   │   ├── bookings
+│   │   │   ├── bookings_test.go
+│   │   │   ├── handler.go
+│   │   │   └── routes.go
+│   │   ├── breaks
+│   │   │   ├── breaks_test.go
+│   │   │   ├── handler.go
+│   │   │   └── routes.go
+│   │   ├── clients
+│   │   │   ├── clients_tast.go
+│   │   │   ├── handler.go
+│   │   │   └── routes.go
+│   │   ├── history_log
+│   │   ├── notifications
+│   │   │   ├── handler.go
+│   │   │   └── routes.go
+│   │   ├── routes
+│   │   │   └── routes.go
+│   │   ├── schedules
+│   │   │   ├── handler.go
+│   │   │   ├── routes.go
+│   │   │   └── schedules_test.go
+│   │   ├── services
+│   │   │   ├── handler.go
+│   │   │   ├── routes.go
+│   │   │   └── services_test.go
+│   │   └── users
+│   │       ├── handler.go
+│   │       ├── routes.go
+│   │       └── users_test.go
+│   └── pkg
+│       ├── db
+│       │   ├── connection.go
+│       │   ├── models
+│       │   │   ├── bookings.go
+│       │   │   ├── breaks.go
+│       │   │   ├── clients.go
+│       │   │   ├── history_log.go
+│       │   │   ├── notifications.go
+│       │   │   ├── schedules.go
+│       │   │   ├── services.go
+│       │   │   └── users.go
+│       │   └── storage
+│       │       └── storage.go
+│       ├── logger
+│       ├── middleware
+│       │   ├── CORSM.go
+│       │   └── RequestLogger.go
+│       └── utils
+│           ├── apiresponse.go
+│           ├── hashpass.go
+│           └── img
+│               ├── APiGO.png
+│               └── gopher.png
 ├── docker-compose.yml
 ├── Dockerfile
-├── docs
-│   ├── docs.go
-│   ├── swagger.json
-│   └── swagger.yaml
 ├── go.mod
 ├── go.sum
-├── internal
-│   ├── bookings
-│   │   ├── bookings_test.go
-│   │   └── handler.go
-│   ├── breaks
-│   │   ├── breaks_test.go
-│   │   └── handler.go
-│   ├── clients
-│   │   ├── clients_tast.go
-│   │   └── handler.go
-│   ├── history_log
-│   ├── notifications
-│   │   └── handler.go
-│   ├── routes
-│   │   └── routes.go
-│   ├── schedules
-│   │   ├── handler.go
-│   │   └── schedules_test.go
-│   ├── services
-│   │   ├── handler.go
-│   │   └── services_test.go
-│   └── users
-│       ├── handler.go
-│       └── users_test.go
-├── pkg
-│   ├── db
-│   │   ├── connection.go
-│   │   ├── models
-│   │   │   ├── bookings.go
-│   │   │   ├── breaks.go
-│   │   │   ├── clients.go
-│   │   │   ├── history_log.go
-│   │   │   ├── notifications.go
-│   │   │   ├── schedules.go
-│   │   │   ├── services.go
-│   │   │   └── users.go
-│   │   └── storage
-│   │       └── storage.go
-│   ├── logger
-│   ├── middleware
-│   │   ├── CORSM.go
-│   │   └── RequestLogger.go
-│   └── utils
-│       ├── apiresponse.go
-│       ├── hashpass.go
-│       └── img
-│           ├── APiGO.png
-│           └── gopher.png
 └── README.md
-
 ```
 
 ---
@@ -120,7 +127,7 @@ GoBarberCRM API — это высокопроизводительный backend 
 ## 📂 Структура БД
 
 <p align="center">
-  <img src="pkg/utils/img/APiGO.png" alt="API Database Structure" width="600"/>
+  <img src="app/pkg/utils/img/APiGO.png" alt="API Database Structure" width="600"/>
 </p>
 
 ---
@@ -143,7 +150,7 @@ go mod tidy
 
 ### 2. Настройка окружения
 
-Создайте файл `config.yaml` в папке `configs/`:
+Создайте файл `config.yaml` в папке `app/configs/`:
 
 ```yaml
 database:

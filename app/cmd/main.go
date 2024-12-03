@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/0sokrat0/GoGRAFFApi.git/configs"
-	_ "github.com/0sokrat0/GoGRAFFApi.git/docs"
-	"github.com/0sokrat0/GoGRAFFApi.git/internal/routes"
-	"github.com/0sokrat0/GoGRAFFApi.git/pkg/db"
+	"github.com/0sokrat0/GoGRAFFApi.git/app/configs"
+	_ "github.com/0sokrat0/GoGRAFFApi.git/app/docs"
+	"github.com/0sokrat0/GoGRAFFApi.git/app/internal/routes"
+	"github.com/0sokrat0/GoGRAFFApi.git/app/pkg/db"
 )
 
 // @title GoGRAFF API
@@ -17,7 +17,7 @@ import (
 // @BasePath /
 func main() {
 	// Загружаем конфигурацию
-	cfg, err := configs.LoadConfig("./configs")
+	cfg, err := configs.LoadConfig("./app/configs")
 	if err != nil {
 		log.Fatalf("Error loading config: %v", err)
 	}

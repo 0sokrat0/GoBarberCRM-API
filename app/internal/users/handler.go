@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/0sokrat0/GoGRAFFApi.git/pkg/db"
-	"github.com/0sokrat0/GoGRAFFApi.git/pkg/db/models"
-	"github.com/0sokrat0/GoGRAFFApi.git/pkg/utils"
+	"github.com/0sokrat0/GoGRAFFApi.git/app/pkg/db"
+	"github.com/0sokrat0/GoGRAFFApi.git/app/pkg/db/models"
+	"github.com/0sokrat0/GoGRAFFApi.git/app/pkg/utils"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 )
