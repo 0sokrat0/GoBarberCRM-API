@@ -16,19 +16,17 @@ import (
 // @host localhost:8080
 // @BasePath /
 func main() {
-	// Загружаем конфигурацию
+
 	cfg, err := configs.LoadConfig("./app/configs")
 	if err != nil {
 		log.Fatalf("Error loading config: %v", err)
 	}
 
-	// Формируем строку подключения к базе данных
 	dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=%s",
 		cfg.Database.Host, cfg.Database.Port, cfg.Database.User, cfg.Database.Password, cfg.Database.Name, cfg.Database.SslMode,
 	)
 	log.Printf("Connecting to database: %s", dsn)
 
-	// Инициализируем базу данных
 	err = db.InitDB(dsn)
 	if err != nil {
 		log.Fatalf("Failed to connect to the database: %v", err)
