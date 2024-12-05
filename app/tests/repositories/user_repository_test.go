@@ -1,4 +1,4 @@
-package tests
+package repositories
 
 import (
 	"github.com/0sokrat0/GoGRAFFApi.git/app/internal/models"

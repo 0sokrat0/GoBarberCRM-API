@@ -1,8 +1,9 @@
-package tests
+package repositories
 
 import (
 	"github.com/0sokrat0/GoGRAFFApi.git/app/internal/models"
 	"github.com/0sokrat0/GoGRAFFApi.git/app/internal/repositories"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"testing"
