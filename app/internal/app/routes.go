@@ -17,6 +17,7 @@ import (
 )
 
 func SetupRouter(database *gorm.DB) *gin.Engine {
+	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
 
 	// Middleware

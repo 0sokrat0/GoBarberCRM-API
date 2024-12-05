@@ -11,6 +11,7 @@
 <p align="center">
   <img alt="GoLang" src="https://img.shields.io/badge/Go-v1.23-blue?style=flat-square&logo=go"/>
   <img alt="Gin" src="https://img.shields.io/badge/Gin-Framework-blueviolet?style=flat-square"/>
+   <img alt="GORM" src="https://img.shields.io/badge/GORM-ORM-red?style=flat-square"/>
   <img alt="PostgreSQL" src="https://img.shields.io/badge/PostgreSQL-v14-blue?style=flat-square&logo=postgresql"/>
   <img alt="Docker" src="https://img.shields.io/badge/Docker-Ready-2496ED?style=flat-square&logo=docker"/>
   <img alt="Swagger" src="https://img.shields.io/badge/Swagger-API%20Docs-green?style=flat-square&logo=swagger"/>
@@ -91,6 +92,7 @@ GoBarberCRM API — это высокопроизводительный backend 
 │   │   │   ├── bookings.go
 │   │   │   ├── breaks.go
 │   │   │   ├── clients.go
+│   │   │   ├── history_log.go
 │   │   │   ├── notifications.go
 │   │   │   ├── schedules.go
 │   │   │   ├── services.go
@@ -133,18 +135,20 @@ GoBarberCRM API — это высокопроизводительный backend 
 │   │           └── gopher.png
 │   └── tests
 │       └── repositories
-│           └── tests
-│               ├── client_repository_test.go
-│               ├── helptest.go
-│               ├── notification_repository_test.go
-│               ├── schedule_repository_test.go
-│               ├── service_repository_test.go
-│               └── user_repository_test.go
+│           ├── client_repository_test.go
+│           ├── helptest.go
+│           ├── notification_repository_test.go
+│           ├── schedule_repository_test.go
+│           ├── service_repository_test.go
+│           └── user_repository_test.go
 ├── docker-compose.yml
 ├── Dockerfile
 ├── go.mod
 ├── go.sum
+├── Makefile
 └── README.md
+
+21 directories, 69 files
 
 ```
 
@@ -246,4 +250,38 @@ docker run -p 8080:8080 gobarbercrm
 
 5. Откройте **Pull Request** и добавьте описание изменений.
 
+---
+
+### 🛠 Полный запуск проекта
+1. Запуск через docker-compose
+
+Для удобства поднятия всех необходимых сервисов, используется docker-compose. Убедитесь, что в вашем окружении установлен Docker и Docker Compose.
+```bash
+docker-compose up --build
+```
+
+2. Запуск через Makefile
+
+```bash
+make
+```
+---
+
+### Компоненты, которые поднимаются вместе c API
+````
+При запуске с помощью docker-compose автоматически поднимаются следующие компоненты:
+Компонент	Описание
+PostgreSQL	Реляционная база данных для хранения всех данных (клиенты, расписания, бронирования и т.д.).
+GoBarberCRM API	Основной backend для работы с клиентами через REST API.
+Swagger UI	Интерфейс для документирования и тестирования API.
+
+````
+---
+
+### 🛠 Проверка состояния
+
+    API доступен по адресу: http://localhost:8080.
+    Swagger UI доступен по адресу: http://localhost:8080/swagger/index.html.
+    PostgreSQL доступен на порту 5432.
+   
 ---
