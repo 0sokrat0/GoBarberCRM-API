@@ -1,4 +1,3 @@
-
 # ✂️ GoBarberCRM API
 
 ---
@@ -9,20 +8,28 @@
 
 ---
 
-![Go](https://img.shields.io/badge/Go-v1.23-blue?style=flat-square&logo=go)
-![Gin](https://img.shields.io/badge/Gin-Framework-blueviolet?style=flat-square)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-v14-blue?style=flat-square&logo=postgresql)
-![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=flat-square&logo=docker)
-![Swagger](https://img.shields.io/badge/Swagger-API%20Docs-green?style=flat-square&logo=swagger)
+<p align="center">
+  <img alt="GoLang" src="https://img.shields.io/badge/Go-v1.23-blue?style=flat-square&logo=go"/>
+  <img alt="Gin" src="https://img.shields.io/badge/Gin-Framework-blueviolet?style=flat-square"/>
+  <img alt="PostgreSQL" src="https://img.shields.io/badge/PostgreSQL-v14-blue?style=flat-square&logo=postgresql"/>
+  <img alt="Docker" src="https://img.shields.io/badge/Docker-Ready-2496ED?style=flat-square&logo=docker"/>
+  <img alt="Swagger" src="https://img.shields.io/badge/Swagger-API%20Docs-green?style=flat-square&logo=swagger"/>
+</p>
 
-[![GitHub](https://img.shields.io/badge/GitHub-GoBarberCRM-black?style=for-the-badge&logo=github)](https://github.com/0sokrat0/GoBarberCRM-API)
-[![Telegram](https://img.shields.io/badge/Telegram-sokrat_00-blue?style=for-the-badge&logo=telegram)](https://t.me/SOKRAT_00)
+<p align="center">
+  <a href="https://github.com/0sokrat0/GoBarberCRM-API">
+    <img src="https://img.shields.io/badge/GitHub-GoBarberCRM-black?style=for-the-badge&logo=github" alt="GitHub"/>
+  </a>
+  <a href="https://t.me/SOKRAT_00">
+    <img src="https://img.shields.io/badge/Telegram-sokrat_00-blue?style=for-the-badge&logo=telegram" alt="Telegram"/>
+  </a>
+</p>
 
 GoBarberCRM API — это высокопроизводительный backend API для управления системой CRM в барбершопах. Он предоставляет удобные инструменты для работы с клиентами, расписанием, бронированием услуг и уведомлениями.
 
 ---
 
-## 📖 Возможности
+## 📖 Основные возможности
 
 - 📅 Управление расписанием сотрудников.
 - 💈 Учет клиентов и их истории посещений.
@@ -33,7 +40,7 @@ GoBarberCRM API — это высокопроизводительный backend 
 
 ---
 
-## 🚀 Технологии и стек
+## 🚀 Технологии
 
 | Технология      | Описание                                    |
 |------------------|---------------------------------------------|
@@ -42,7 +49,7 @@ GoBarberCRM API — это высокопроизводительный backend 
 | **PostgreSQL**  | Реляционная база данных                     |
 | **GORM**        | ORM для работы с базой данных PostgreSQL    |
 | **Docker**      | Контейнеризация приложения                  |
-| **Swagger**     | Автодокументация API                       |
+| **Swagger**     | Автодокументация API                        |
 
 ---
 
@@ -51,80 +58,99 @@ GoBarberCRM API — это высокопроизводительный backend 
 ```plaintext
 .
 ├── app
-│   ├── cmd
-│   │   └── main.go
-│   ├── configs
-│   │   ├── configs.go
-│   │   └── config.yaml
-│   ├── docs
-│   │   ├── docs.go
-│   │   ├── swagger.json
-│   │   └── swagger.yaml
-│   ├── internal
-│   │   ├── bookings
-│   │   │   ├── bookings_test.go
-│   │   │   ├── handler.go
-│   │   │   └── routes.go
-│   │   ├── breaks
-│   │   │   ├── breaks_test.go
-│   │   │   ├── handler.go
-│   │   │   └── routes.go
-│   │   ├── clients
-│   │   │   ├── clients_tast.go
-│   │   │   ├── handler.go
-│   │   │   └── routes.go
-│   │   ├── history_log
-│   │   ├── notifications
-│   │   │   ├── handler.go
-│   │   │   └── routes.go
-│   │   ├── routes
-│   │   │   └── routes.go
-│   │   ├── schedules
-│   │   │   ├── handler.go
-│   │   │   ├── routes.go
-│   │   │   └── schedules_test.go
-│   │   ├── services
-│   │   │   ├── handler.go
-│   │   │   ├── routes.go
-│   │   │   └── services_test.go
-│   │   └── users
-│   │       ├── handler.go
-│   │       ├── routes.go
-│   │       └── users_test.go
-│   └── pkg
-│       ├── db
-│       │   ├── connection.go
-│       │   ├── models
-│       │   │   ├── bookings.go
-│       │   │   ├── breaks.go
-│       │   │   ├── clients.go
-│       │   │   ├── history_log.go
-│       │   │   ├── notifications.go
-│       │   │   ├── schedules.go
-│       │   │   ├── services.go
-│       │   │   └── users.go
-│       │   └── storage
-│       │       └── storage.go
-│       ├── logger
-│       ├── middleware
-│       │   ├── CORSM.go
-│       │   └── RequestLogger.go
-│       └── utils
-│           ├── apiresponse.go
-│           ├── hashpass.go
-│           └── img
-│               ├── APiGO.png
-│               └── gopher.png
+│   ├── cmd
+│   │   └── main.go
+│   ├── configs
+│   │   ├── configs.go
+│   │   └── config.yaml
+│   ├── docs
+│   │   ├── docs.go
+│   │   ├── swagger.json
+│   │   └── swagger.yaml
+│   ├── internal
+│   │   ├── app
+│   │   │   └── routes.go
+│   │   ├── auth
+│   │   │   ├── hashpass.go
+│   │   │   └── jwt.go
+│   │   ├── handlers
+│   │   │   ├── auth.go
+│   │   │   ├── bookings.go
+│   │   │   ├── breaks.go
+│   │   │   ├── clients.go
+│   │   │   ├── notifications.go
+│   │   │   ├── schedules.go
+│   │   │   ├── services.go
+│   │   │   └── users.go
+│   │   ├── middleware
+│   │   │   ├── CORSM.go
+│   │   │   ├── jwt.go
+│   │   │   └── RequestLogger.go
+│   │   ├── models
+│   │   │   ├── AuthUser.go
+│   │   │   ├── bookings.go
+│   │   │   ├── breaks.go
+│   │   │   ├── clients.go
+│   │   │   ├── notifications.go
+│   │   │   ├── schedules.go
+│   │   │   ├── services.go
+│   │   │   └── users.go
+│   │   ├── repositories
+│   │   │   ├── auth.go
+│   │   │   ├── bookings.go
+│   │   │   ├── breaks.go
+│   │   │   ├── clients.go
+│   │   │   ├── notifications.go
+│   │   │   ├── schedules.go
+│   │   │   ├── services.go
+│   │   │   └── users.go
+│   │   ├── routes
+│   │   │   ├── auth.go
+│   │   │   ├── booking.go
+│   │   │   ├── breaks.go
+│   │   │   ├── clients.go
+│   │   │   ├── notifications.go
+│   │   │   ├── schedules.go
+│   │   │   ├── services.go
+│   │   │   └── users.go
+│   │   └── services
+│   │       ├── bookings.go
+│   │       ├── breaks.go
+│   │       ├── clients.go
+│   │       ├── notifications.go
+│   │       ├── schedules.go
+│   │       ├── services.go
+│   │       └── users.go
+│   ├── pkg
+│   │   ├── db
+│   │   │   └── connection.go
+│   │   ├── logger
+│   │   │   └── logger.go
+│   │   └── utils
+│   │       ├── apiresponse.go
+│   │       └── img
+│   │           ├── APiGO.png
+│   │           └── gopher.png
+│   └── tests
+│       └── repositories
+│           └── tests
+│               ├── client_repository_test.go
+│               ├── helptest.go
+│               ├── notification_repository_test.go
+│               ├── schedule_repository_test.go
+│               ├── service_repository_test.go
+│               └── user_repository_test.go
 ├── docker-compose.yml
 ├── Dockerfile
 ├── go.mod
 ├── go.sum
 └── README.md
+
 ```
 
 ---
 
-## 📂 Структура БД
+## 🗂 Структура БД
 
 <p align="center">
   <img src="app/pkg/utils/img/APiGO.png" alt="API Database Structure" width="600"/>
@@ -134,7 +160,7 @@ GoBarberCRM API — это высокопроизводительный backend 
 
 ## 📋 Документация API
 
-Автоматическая документация API доступна по [http://localhost:8080/swagger/index.html](http://localhost:8080/swagger/index.html).
+API задокументирован и доступен по адресу: [http://localhost:8080/swagger/index.html](http://localhost:8080/swagger/index.html).
 
 ---
 
@@ -142,7 +168,7 @@ GoBarberCRM API — это высокопроизводительный backend 
 
 ### 1. Установка зависимостей
 
-Убедитесь, что у вас установлен Go, Docker и PostgreSQL.
+Убедитесь, что у вас установлен **Go**, **Docker** и **PostgreSQL**:
 
 ```bash
 go mod tidy
@@ -150,7 +176,7 @@ go mod tidy
 
 ### 2. Настройка окружения
 
-Создайте файл `config.yaml` в папке `app/configs/`:
+Создайте файл `config.yaml` в папке `app/configs/` со следующим содержимым:
 
 ```yaml
 database:
@@ -193,35 +219,31 @@ docker run -p 8080:8080 gobarbercrm
 
 ---
 
-## 🔗 Ссылки
-
-- 📚 [Документация API (Swagger)](http://localhost:8080/swagger/index.html)
-- 📂 [GitHub Repository](https://github.com/0sokrat0/GoBarberCRM-API)
-
----
-
 ## 🤝 Вклад в проект
 
+### Как внести изменения
+
 1. Форкните репозиторий.
-2. Создайте ветку для своих изменений:
+2. Создайте новую ветку:
 
    ```bash
    git checkout -b feature/YourFeature
    ```
 
-3. Сделайте коммит с изменениями:
+3. Сделайте свои изменения и зафиксируйте их:
 
    ```bash
-   git commit -m "Add YourFeature"
+   git commit -m "Добавлен функционал: YourFeature"
    ```
 
-4. Отправьте изменения:
+4. Отправьте изменения на свой форк:
 
    ```bash
    git push origin feature/YourFeature
    ```
 
-5. Откройте Pull Request.
+
+
+5. Откройте **Pull Request** и добавьте описание изменений.
 
 ---
-
