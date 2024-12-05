@@ -5,10 +5,9 @@ app:
   jwt_secret: "Graffsecretapi"
 
 database:
-  host: "localhost"
+  host: "db"
   port: 5432
   user: "postgres"
   password: "3215"
   name: "GoBarberCRM"
   sslmode: "disable"
-

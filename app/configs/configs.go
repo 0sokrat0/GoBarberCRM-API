@@ -31,7 +31,7 @@ type DatabaseConfig struct {
 var AppConfigInstance *Config
 
 func LoadConfig(path string) (*Config, error) {
-	viper.SetConfigName("config")
+	viper.SetConfigName("config") // Ожидается файл config.yaml
 	viper.SetConfigType("yaml")
 	viper.AddConfigPath(path)
 	viper.AutomaticEnv()

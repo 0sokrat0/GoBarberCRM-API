@@ -20,7 +20,7 @@ import (
 // @name Authorization
 func main() {
 
-	cfg, err := configs.LoadConfig("./app/configs")
+	cfg, err := configs.LoadConfig("/root/app/configs")
 	if err != nil {
 		log.Fatalf("Error loading config: %v", err)
 	}
