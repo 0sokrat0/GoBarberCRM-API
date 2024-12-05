@@ -1,11 +1,31 @@
-basePath: /
+basePath: /api
 definitions:
+  handlers.LoginInput:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  handlers.RegisterInput:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
   models.Bookings:
     properties:
       booking_time:
         type: string
       client:
-        $ref: '#/definitions/models.Clients'
+        $ref: '#/definitions/models.Client'
       client_id:
         type: integer
       created_at:
@@ -13,7 +33,7 @@ definitions:
       id:
         type: integer
       service:
-        $ref: '#/definitions/models.Services'
+        $ref: '#/definitions/models.Service'
       service_id:
         type: integer
       status:
@@ -21,11 +41,11 @@ definitions:
       updated_at:
         type: string
       user:
-        $ref: '#/definitions/models.Users'
+        $ref: '#/definitions/models.User'
       user_id:
         type: integer
     type: object
-  models.Breaks:
+  models.Break:
     properties:
       break_end:
         type: string
@@ -37,70 +57,72 @@ definitions:
         type: integer
       updated_at:
         type: string
+      user:
+        $ref: '#/definitions/models.User'
       user_id:
         type: integer
     type: object
-  models.Clients:
+  models.Client:
     properties:
       created_at:
-        description: Created At
         type: string
       email:
-        description: Email
         type: string
       first_name:
-        description: First Name
         type: string
       id:
-        description: ID
         type: integer
       last_name:
-        description: Last Name
         type: string
       phone_number:
-        description: Phone Number
         type: string
       tg_id:
-        description: Telegram ID
         type: integer
       tg_nickname:
-        description: Telegram Nickname
         type: string
       updated_at:
-        description: Updated At
         type: string
     type: object
-  models.Schedules:
+  models.Notification:
+    properties:
+      client_id:
+        type: integer
+      id:
+        type: integer
+      message:
+        type: string
+      notification_type:
+        type: string
+      sent_at:
+        type: string
+      status:
+        type: string
+    type: object
+  models.Schedule:
     properties:
       created_at:
-        description: Дата создания
         type: string
       end_time:
-        description: Время окончания рабочего дня
         type: string
       id:
-        description: Уникальный идентификатор расписания
         type: integer
       schedule_day:
-        description: День недели (например, понедельник)
         type: string
       start_time:
-        description: Время начала рабочего дня
         type: string
       updated_at:
-        description: Дата последнего обновления
         type: string
       user_id:
-        description: Ссылка на сотрудника
         type: integer
     type: object
-  models.Services:
+  models.Service:
     properties:
       created_at:
         type: string
       description:
         type: string
       duration:
+        description: Продолжительность в минутах
         type: integer
       id:
         type: integer
@@ -113,7 +135,7 @@ definitions:
       updated_at:
         type: string
     type: object
-  models.Users:
+  models.User:
     properties:
       created_at:
         type: string
@@ -122,8 +144,6 @@ definitions:
       id:
         type: integer
       last_login_at:
-        type: string
-      password_hash:
         type: string
       phone_number:
         type: string
@@ -141,6 +161,76 @@ info:
   title: GoGRAFF API
   version: "1.0"
 paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticates the user and returns a JWT token
+      parameters:
+      - description: User credentials
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.LoginInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: JWT token
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid input
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Invalid credentials
+          schema:
+            additionalProperties: true
+            type: object
+      summary: User login
+      tags:
+      - Authentication
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      description: Creates a new user account
+      parameters:
+      - description: User registration data
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.RegisterInput'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: User registered successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid input
+          schema:
+            additionalProperties: true
+            type: object
+        "409":
+          description: Username already exists
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Failed to register user
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Register a new user
+      tags:
+      - Authentication
   /bookings:
     get:
       description: Получает список всех бронирований
@@ -158,6 +248,8 @@ paths:
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Получить все бронирования
       tags:
       - Бронирования
@@ -194,6 +286,8 @@ paths:
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Создать бронирование
       tags:
       - Бронирования
@@ -222,6 +316,8 @@ paths:
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Удалить бронирование
       tags:
       - Бронирования
@@ -250,6 +346,8 @@ paths:
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Получить бронирование
       tags:
       - Бронирования
@@ -291,6 +389,8 @@ paths:
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Обновить бронирование
       tags:
       - Бронирования
@@ -321,11 +421,13 @@ paths:
           schema:
             additionalProperties: true
             type: object
-        "409":
-          description: Слот времени уже занят
+        "500":
+          description: Ошибка сервера
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Проверить доступность бронирования
       tags:
       - Бронирования
@@ -357,6 +459,8 @@ paths:
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Получить бронирования клиента
       tags:
       - Бронирования
@@ -388,6 +492,8 @@ paths:
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Получить бронирования услуги
       tags:
       - Бронирования
@@ -419,6 +525,8 @@ paths:
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Получить бронирования пользователя
       tags:
       - Бронирования
@@ -432,13 +540,15 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/models.Breaks'
+              $ref: '#/definitions/models.Break'
             type: array
         "500":
           description: Ошибка сервера
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Получить все перерывы
       tags:
       - Перерывы
@@ -452,14 +562,14 @@ paths:
         name: break
         required: true
         schema:
-          $ref: '#/definitions/models.Breaks'
+          $ref: '#/definitions/models.Break'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/models.Breaks'
+            $ref: '#/definitions/models.Break'
         "400":
           description: Некорректный запрос
           schema:
@@ -470,6 +580,8 @@ paths:
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Создать перерыв
       tags:
       - Перерывы
@@ -498,6 +610,8 @@ paths:
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Удалить перерыв
       tags:
       - Перерывы
@@ -515,7 +629,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Breaks'
+            $ref: '#/definitions/models.Break'
         "400":
           description: Некорректный запрос
           schema:
@@ -526,6 +640,8 @@ paths:
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Получить перерыв
       tags:
       - Перерывы
@@ -544,14 +660,14 @@ paths:
         name: break
         required: true
         schema:
-          $ref: '#/definitions/models.Breaks'
+          $ref: '#/definitions/models.Break'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Breaks'
+            $ref: '#/definitions/models.Break'
         "400":
           description: Некорректный запрос
           schema:
@@ -567,6 +683,8 @@ paths:
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Обновить перерыв
       tags:
       - Перерывы
@@ -580,13 +698,15 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/models.Clients'
+              $ref: '#/definitions/models.Client'
             type: array
         "500":
           description: Ошибка сервера
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Получить всех клиентов
       tags:
       - Клиенты
@@ -600,14 +720,14 @@ paths:
         name: client
         required: true
         schema:
-          $ref: '#/definitions/models.Clients'
+          $ref: '#/definitions/models.Client'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/models.Clients'
+            $ref: '#/definitions/models.Client'
         "400":
           description: Некорректный запрос
           schema:
@@ -618,6 +738,8 @@ paths:
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Создать клиента
       tags:
       - Клиенты
@@ -646,6 +768,8 @@ paths:
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Удалить клиента
       tags:
       - Клиенты
@@ -663,7 +787,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Clients'
+            $ref: '#/definitions/models.Client'
         "400":
           description: Некорректный запрос
           schema:
@@ -674,6 +798,8 @@ paths:
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Получить клиента
       tags:
       - Клиенты
@@ -692,14 +818,14 @@ paths:
         name: client
         required: true
         schema:
-          $ref: '#/definitions/models.Clients'
+          $ref: '#/definitions/models.Client'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Clients'
+            $ref: '#/definitions/models.Client'
         "400":
           description: Некорректный запрос
           schema:
@@ -715,6 +841,8 @@ paths:
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Обновить клиента
       tags:
       - Клиенты
@@ -744,6 +872,8 @@ paths:
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Проверить существование клиента
       tags:
       - Клиенты
@@ -763,13 +893,15 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/models.Clients'
+              $ref: '#/definitions/models.Client'
             type: array
         "500":
           description: Ошибка сервера
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Фильтрация клиентов по имени
       tags:
       - Клиенты
@@ -785,16 +917,21 @@ paths:
         name: client
         required: true
         schema:
-          $ref: '#/definitions/models.Clients'
+          $ref: '#/definitions/models.Client'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/models.Clients'
+            $ref: '#/definitions/models.Client'
         "400":
           description: Некорректный запрос
+          schema:
+            additionalProperties: true
+            type: object
+        "409":
+          description: Клиент уже существует
           schema:
             additionalProperties: true
             type: object
@@ -803,6 +940,8 @@ paths:
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Быстрое добавление клиента
       tags:
       - Клиенты
@@ -824,7 +963,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Clients'
+            $ref: '#/definitions/models.Client'
         "400":
           description: Некорректный запрос
           schema:
@@ -835,6 +974,8 @@ paths:
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Найти клиента по контактным данным
       tags:
       - Клиенты
@@ -853,15 +994,175 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Clients'
+            $ref: '#/definitions/models.Client'
         "404":
           description: Клиент не найден
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Получить клиента по Telegram ID
       tags:
       - Клиенты
+  /notifications:
+    get:
+      description: Возвращает список всех уведомлений
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Notification'
+            type: array
+        "500":
+          description: Ошибка сервера
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Получить все уведомления
+      tags:
+      - Уведомления
+    post:
+      consumes:
+      - application/json
+      description: Создает новое уведомление
+      parameters:
+      - description: Данные уведомления
+        in: body
+        name: notification
+        required: true
+        schema:
+          $ref: '#/definitions/models.Notification'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Notification'
+        "400":
+          description: Некорректный запрос
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Ошибка сервера
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Создать уведомление
+      tags:
+      - Уведомления
+  /notifications/{id}:
+    delete:
+      description: Удаляет уведомление по ID
+      parameters:
+      - description: ID уведомления
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: Сообщение об успешном удалении
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Некорректный запрос
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Ошибка сервера
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Удалить уведомление
+      tags:
+      - Уведомления
+    get:
+      description: Возвращает уведомление по его ID
+      parameters:
+      - description: ID уведомления
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Notification'
+        "400":
+          description: Некорректный запрос
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Уведомление не найдено
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Получить уведомление по ID
+      tags:
+      - Уведомления
+    put:
+      consumes:
+      - application/json
+      description: Обновляет данные уведомления по ID
+      parameters:
+      - description: ID уведомления
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Обновленные данные уведомления
+        in: body
+        name: notification
+        required: true
+        schema:
+          $ref: '#/definitions/models.Notification'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Notification'
+        "400":
+          description: Некорректный запрос
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Уведомление не найдено
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Ошибка сервера
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Обновить уведомление
+      tags:
+      - Уведомления
   /schedules:
     get:
       description: Возвращает список всех расписаний
@@ -872,13 +1173,15 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/models.Schedules'
+              $ref: '#/definitions/models.Schedule'
             type: array
         "500":
           description: Ошибка сервера
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Получить все расписания
       tags:
       - Расписания
@@ -892,14 +1195,14 @@ paths:
         name: schedule
         required: true
         schema:
-          $ref: '#/definitions/models.Schedules'
+          $ref: '#/definitions/models.Schedule'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/models.Schedules'
+            $ref: '#/definitions/models.Schedule'
         "400":
           description: Некорректный запрос
           schema:
@@ -910,6 +1213,8 @@ paths:
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Создать расписание
       tags:
       - Расписания
@@ -938,6 +1243,8 @@ paths:
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Удалить расписание
       tags:
       - Расписания
@@ -955,7 +1262,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Schedules'
+            $ref: '#/definitions/models.Schedule'
         "400":
           description: Некорректный запрос
           schema:
@@ -966,6 +1273,8 @@ paths:
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Получить расписание
       tags:
       - Расписания
@@ -984,14 +1293,14 @@ paths:
         name: schedule
         required: true
         schema:
-          $ref: '#/definitions/models.Schedules'
+          $ref: '#/definitions/models.Schedule'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Schedules'
+            $ref: '#/definitions/models.Schedule'
         "400":
           description: Некорректный запрос
           schema:
@@ -1007,6 +1316,8 @@ paths:
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Обновить расписание
       tags:
       - Расписания
@@ -1026,7 +1337,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/models.Schedules'
+              $ref: '#/definitions/models.Schedule'
             type: array
         "400":
           description: Некорректный запрос
@@ -1038,6 +1349,8 @@ paths:
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Фильтрация расписаний по пользователю
       tags:
       - Расписания
@@ -1051,13 +1364,15 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/models.Services'
+              $ref: '#/definitions/models.Service'
             type: array
         "500":
           description: Ошибка сервера
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Получить все услуги
       tags:
       - Услуги
@@ -1071,14 +1386,14 @@ paths:
         name: service
         required: true
         schema:
-          $ref: '#/definitions/models.Services'
+          $ref: '#/definitions/models.Service'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/models.Services'
+            $ref: '#/definitions/models.Service'
         "400":
           description: Некорректный запрос
           schema:
@@ -1089,6 +1404,8 @@ paths:
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Создать услугу
       tags:
       - Услуги
@@ -1117,6 +1434,8 @@ paths:
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Удалить услугу
       tags:
       - Услуги
@@ -1134,7 +1453,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Services'
+            $ref: '#/definitions/models.Service'
         "400":
           description: Некорректный запрос
           schema:
@@ -1145,6 +1464,8 @@ paths:
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Получить услугу
       tags:
       - Услуги
@@ -1163,14 +1484,14 @@ paths:
         name: service
         required: true
         schema:
-          $ref: '#/definitions/models.Services'
+          $ref: '#/definitions/models.Service'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Services'
+            $ref: '#/definitions/models.Service'
         "400":
           description: Некорректный запрос
           schema:
@@ -1186,6 +1507,8 @@ paths:
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Обновить услугу
       tags:
       - Услуги
@@ -1214,6 +1537,8 @@ paths:
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Деактивировать услугу
       tags:
       - Услуги
@@ -1227,13 +1552,15 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/models.Users'
+              $ref: '#/definitions/models.User'
             type: array
         "500":
           description: Ошибка сервера
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Получить всех пользователей
       tags:
       - Пользователи
@@ -1247,14 +1574,14 @@ paths:
         name: user
         required: true
         schema:
-          $ref: '#/definitions/models.Users'
+          $ref: '#/definitions/models.User'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/models.Users'
+            $ref: '#/definitions/models.User'
         "400":
           description: Некорректный запрос
           schema:
@@ -1265,6 +1592,8 @@ paths:
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Создать пользователя
       tags:
       - Пользователи
@@ -1279,7 +1608,7 @@ paths:
         type: integer
       responses:
         "200":
-          description: Сообщение об успешном удалении
+          description: Пользователь успешно удален
           schema:
             additionalProperties: true
             type: object
@@ -1293,6 +1622,8 @@ paths:
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Удалить пользователя
       tags:
       - Пользователи
@@ -1310,7 +1641,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Users'
+            $ref: '#/definitions/models.User'
         "400":
           description: Некорректный запрос
           schema:
@@ -1321,6 +1652,8 @@ paths:
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Получить пользователя
       tags:
       - Пользователи
@@ -1339,14 +1672,15 @@ paths:
         name: user
         required: true
         schema:
-          $ref: '#/definitions/models.Users'
+          $ref: '#/definitions/models.User'
       produces:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Пользователь успешно обновлен
           schema:
-            $ref: '#/definitions/models.Users'
+            additionalProperties: true
+            type: object
         "400":
           description: Некорректный запрос
           schema:
@@ -1362,42 +1696,14 @@ paths:
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Обновить пользователя
       tags:
       - Пользователи
-  /users/authenticate:
-    post:
-      consumes:
-      - application/json
-      description: Проверяет email и пароль для аутентификации
-      parameters:
-      - description: Email и пароль
-        in: body
-        name: credentials
-        required: true
-        schema:
-          additionalProperties:
-            type: string
-          type: object
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Сообщение об успешной аутентификации
-          schema:
-            additionalProperties: true
-            type: object
-        "400":
-          description: Некорректный запрос
-          schema:
-            additionalProperties: true
-            type: object
-        "401":
-          description: Неверные учетные данные
-          schema:
-            additionalProperties: true
-            type: object
-      summary: Аутентификация пользователя
-      tags:
-      - Пользователи
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"
