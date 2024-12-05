@@ -15,8 +15,117 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/auth/login": {
+            "post": {
+                "description": "Authenticates the user and returns a JWT token",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "User login",
+                "parameters": [
+                    {
+                        "description": "User credentials",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.LoginInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "JWT token",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid credentials",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/register": {
+            "post": {
+                "description": "Creates a new user account",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Register a new user",
+                "parameters": [
+                    {
+                        "description": "User registration data",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.RegisterInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "User registered successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "409": {
+                        "description": "Username already exists",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to register user",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
         "/bookings": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Получает список всех бронирований",
                 "produces": [
                     "application/json"
@@ -45,6 +154,11 @@ const docTemplate = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Создает новое бронирование, если слот времени не занят",
                 "consumes": [
                     "application/json"
@@ -100,6 +214,11 @@ const docTemplate = `{
         },
         "/bookings/availability": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Проверяет, доступен ли временной слот для пользователя",
                 "produces": [
                     "application/json"
@@ -139,8 +258,8 @@ const docTemplate = `{
                             "additionalProperties": true
                         }
                     },
-                    "409": {
-                        "description": "Слот времени уже занят",
+                    "500": {
+                        "description": "Ошибка сервера",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
@@ -151,6 +270,11 @@ const docTemplate = `{
         },
         "/bookings/client/{client_id}": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Получает список бронирований по ID клиента",
                 "produces": [
                     "application/json"
@@ -197,6 +321,11 @@ const docTemplate = `{
         },
         "/bookings/service/{service_id}": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Получает список бронирований по ID услуги",
                 "produces": [
                     "application/json"
@@ -243,6 +372,11 @@ const docTemplate = `{
         },
         "/bookings/user/{user_id}": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Получает список бронирований по ID пользователя",
                 "produces": [
                     "application/json"
@@ -289,6 +423,11 @@ const docTemplate = `{
         },
         "/bookings/{id}": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Получает бронирование по ID",
                 "produces": [
                     "application/json"
@@ -330,6 +469,11 @@ const docTemplate = `{
                 }
             },
             "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Обновляет данные бронирования по ID",
                 "consumes": [
                     "application/json"
@@ -390,6 +534,11 @@ const docTemplate = `{
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Удаляет бронирование по ID",
                 "tags": [
                     "Бронирования"
@@ -431,6 +580,11 @@ const docTemplate = `{
         },
         "/breaks": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Возвращает список всех перерывов",
                 "produces": [
                     "application/json"
@@ -445,7 +599,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/models.Breaks"
+                                "$ref": "#/definitions/models.Break"
                             }
                         }
                     },
@@ -459,6 +613,11 @@ const docTemplate = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Создает новый перерыв",
                 "consumes": [
                     "application/json"
@@ -477,7 +636,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.Breaks"
+                            "$ref": "#/definitions/models.Break"
                         }
                     }
                 ],
@@ -485,7 +644,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/models.Breaks"
+                            "$ref": "#/definitions/models.Break"
                         }
                     },
                     "400": {
@@ -507,6 +666,11 @@ const docTemplate = `{
         },
         "/breaks/{id}": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Возвращает данные перерыва по ID",
                 "produces": [
                     "application/json"
@@ -528,7 +692,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.Breaks"
+                            "$ref": "#/definitions/models.Break"
                         }
                     },
                     "400": {
@@ -548,6 +712,11 @@ const docTemplate = `{
                 }
             },
             "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Обновляет данные перерыва по ID",
                 "consumes": [
                     "application/json"
@@ -573,7 +742,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.Breaks"
+                            "$ref": "#/definitions/models.Break"
                         }
                     }
                 ],
@@ -581,7 +750,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.Breaks"
+                            "$ref": "#/definitions/models.Break"
                         }
                     },
                     "400": {
@@ -608,6 +777,11 @@ const docTemplate = `{
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Удаляет перерыв по ID",
                 "tags": [
                     "Перерывы"
@@ -649,6 +823,11 @@ const docTemplate = `{
         },
         "/clients": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Возвращает список всех клиентов",
                 "produces": [
                     "application/json"
@@ -663,7 +842,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/models.Clients"
+                                "$ref": "#/definitions/models.Client"
                             }
                         }
                     },
@@ -677,6 +856,11 @@ const docTemplate = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Создает нового клиента",
                 "consumes": [
                     "application/json"
@@ -695,7 +879,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.Clients"
+                            "$ref": "#/definitions/models.Client"
                         }
                     }
                 ],
@@ -703,7 +887,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/models.Clients"
+                            "$ref": "#/definitions/models.Client"
                         }
                     },
                     "400": {
@@ -725,6 +909,11 @@ const docTemplate = `{
         },
         "/clients/check": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Проверяет, существует ли клиент с заданными контактными данными",
                 "produces": [
                     "application/json"
@@ -769,6 +958,11 @@ const docTemplate = `{
         },
         "/clients/filter": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Возвращает список клиентов по имени",
                 "produces": [
                     "application/json"
@@ -792,7 +986,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/models.Clients"
+                                "$ref": "#/definitions/models.Client"
                             }
                         }
                     },
@@ -808,6 +1002,11 @@ const docTemplate = `{
         },
         "/clients/quick_add": {
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Создает клиента с минимальными данными (например, через Telegram и/или номер телефона)",
                 "consumes": [
                     "application/json"
@@ -826,7 +1025,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.Clients"
+                            "$ref": "#/definitions/models.Client"
                         }
                     }
                 ],
@@ -834,11 +1033,18 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/models.Clients"
+                            "$ref": "#/definitions/models.Client"
                         }
                     },
                     "400": {
                         "description": "Некорректный запрос",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "409": {
+                        "description": "Клиент уже существует",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
@@ -856,6 +1062,11 @@ const docTemplate = `{
         },
         "/clients/search": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Ищет клиента по Email или номеру телефона",
                 "produces": [
                     "application/json"
@@ -882,7 +1093,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.Clients"
+                            "$ref": "#/definitions/models.Client"
                         }
                     },
                     "400": {
@@ -904,6 +1115,11 @@ const docTemplate = `{
         },
         "/clients/telegram/{tg_id}": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Возвращает данные клиента по Telegram ID",
                 "produces": [
                     "application/json"
@@ -925,7 +1141,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.Clients"
+                            "$ref": "#/definitions/models.Client"
                         }
                     },
                     "404": {
@@ -940,6 +1156,11 @@ const docTemplate = `{
         },
         "/clients/{id}": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Возвращает данные клиента по ID",
                 "produces": [
                     "application/json"
@@ -961,7 +1182,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.Clients"
+                            "$ref": "#/definitions/models.Client"
                         }
                     },
                     "400": {
@@ -981,6 +1202,11 @@ const docTemplate = `{
                 }
             },
             "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Обновляет данные клиента по ID",
                 "consumes": [
                     "application/json"
@@ -1006,7 +1232,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.Clients"
+                            "$ref": "#/definitions/models.Client"
                         }
                     }
                 ],
@@ -1014,7 +1240,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.Clients"
+                            "$ref": "#/definitions/models.Client"
                         }
                     },
                     "400": {
@@ -1041,6 +1267,11 @@ const docTemplate = `{
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Удаляет клиента по ID",
                 "tags": [
                     "Клиенты"
@@ -1080,8 +1311,256 @@ const docTemplate = `{
                 }
             }
         },
+        "/notifications": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Возвращает список всех уведомлений",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Уведомления"
+                ],
+                "summary": "Получить все уведомления",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Notification"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Ошибка сервера",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Создает новое уведомление",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Уведомления"
+                ],
+                "summary": "Создать уведомление",
+                "parameters": [
+                    {
+                        "description": "Данные уведомления",
+                        "name": "notification",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Notification"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.Notification"
+                        }
+                    },
+                    "400": {
+                        "description": "Некорректный запрос",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Ошибка сервера",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/notifications/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Возвращает уведомление по его ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Уведомления"
+                ],
+                "summary": "Получить уведомление по ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID уведомления",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Notification"
+                        }
+                    },
+                    "400": {
+                        "description": "Некорректный запрос",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Уведомление не найдено",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Обновляет данные уведомления по ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Уведомления"
+                ],
+                "summary": "Обновить уведомление",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID уведомления",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Обновленные данные уведомления",
+                        "name": "notification",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Notification"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Notification"
+                        }
+                    },
+                    "400": {
+                        "description": "Некорректный запрос",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Уведомление не найдено",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Ошибка сервера",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Удаляет уведомление по ID",
+                "tags": [
+                    "Уведомления"
+                ],
+                "summary": "Удалить уведомление",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID уведомления",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Сообщение об успешном удалении",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Некорректный запрос",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Ошибка сервера",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
         "/schedules": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Возвращает список всех расписаний",
                 "produces": [
                     "application/json"
@@ -1096,7 +1575,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/models.Schedules"
+                                "$ref": "#/definitions/models.Schedule"
                             }
                         }
                     },
@@ -1110,6 +1589,11 @@ const docTemplate = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Создает новое расписание",
                 "consumes": [
                     "application/json"
@@ -1128,7 +1612,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.Schedules"
+                            "$ref": "#/definitions/models.Schedule"
                         }
                     }
                 ],
@@ -1136,7 +1620,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/models.Schedules"
+                            "$ref": "#/definitions/models.Schedule"
                         }
                     },
                     "400": {
@@ -1158,6 +1642,11 @@ const docTemplate = `{
         },
         "/schedules/filter": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Возвращает расписания для указанного пользователя",
                 "produces": [
                     "application/json"
@@ -1181,7 +1670,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/models.Schedules"
+                                "$ref": "#/definitions/models.Schedule"
                             }
                         }
                     },
@@ -1204,6 +1693,11 @@ const docTemplate = `{
         },
         "/schedules/{id}": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Возвращает данные расписания по ID",
                 "produces": [
                     "application/json"
@@ -1225,7 +1719,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.Schedules"
+                            "$ref": "#/definitions/models.Schedule"
                         }
                     },
                     "400": {
@@ -1245,6 +1739,11 @@ const docTemplate = `{
                 }
             },
             "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Обновляет данные расписания по ID",
                 "consumes": [
                     "application/json"
@@ -1270,7 +1769,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.Schedules"
+                            "$ref": "#/definitions/models.Schedule"
                         }
                     }
                 ],
@@ -1278,7 +1777,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.Schedules"
+                            "$ref": "#/definitions/models.Schedule"
                         }
                     },
                     "400": {
@@ -1305,6 +1804,11 @@ const docTemplate = `{
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Удаляет расписание по ID",
                 "tags": [
                     "Расписания"
@@ -1346,6 +1850,11 @@ const docTemplate = `{
         },
         "/services": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Возвращает список всех услуг",
                 "produces": [
                     "application/json"
@@ -1360,7 +1869,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/models.Services"
+                                "$ref": "#/definitions/models.Service"
                             }
                         }
                     },
@@ -1374,6 +1883,11 @@ const docTemplate = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Создает новую услугу",
                 "consumes": [
                     "application/json"
@@ -1392,7 +1906,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.Services"
+                            "$ref": "#/definitions/models.Service"
                         }
                     }
                 ],
@@ -1400,7 +1914,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/models.Services"
+                            "$ref": "#/definitions/models.Service"
                         }
                     },
                     "400": {
@@ -1422,6 +1936,11 @@ const docTemplate = `{
         },
         "/services/{id}": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Возвращает данные услуги по ID",
                 "produces": [
                     "application/json"
@@ -1443,7 +1962,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.Services"
+                            "$ref": "#/definitions/models.Service"
                         }
                     },
                     "400": {
@@ -1463,6 +1982,11 @@ const docTemplate = `{
                 }
             },
             "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Обновляет данные услуги по ID",
                 "consumes": [
                     "application/json"
@@ -1488,7 +2012,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.Services"
+                            "$ref": "#/definitions/models.Service"
                         }
                     }
                 ],
@@ -1496,7 +2020,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.Services"
+                            "$ref": "#/definitions/models.Service"
                         }
                     },
                     "400": {
@@ -1523,6 +2047,11 @@ const docTemplate = `{
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Удаляет услугу по ID",
                 "tags": [
                     "Услуги"
@@ -1564,6 +2093,11 @@ const docTemplate = `{
         },
         "/services/{id}/deactivate": {
             "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Помечает услугу как неактивную",
                 "tags": [
                     "Услуги"
@@ -1605,6 +2139,11 @@ const docTemplate = `{
         },
         "/users": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Возвращает список всех пользователей",
                 "produces": [
                     "application/json"
@@ -1619,7 +2158,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/models.Users"
+                                "$ref": "#/definitions/models.User"
                             }
                         }
                     },
@@ -1633,6 +2172,11 @@ const docTemplate = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Создает нового пользователя",
                 "consumes": [
                     "application/json"
@@ -1651,7 +2195,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.Users"
+                            "$ref": "#/definitions/models.User"
                         }
                     }
                 ],
@@ -1659,7 +2203,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/models.Users"
+                            "$ref": "#/definitions/models.User"
                         }
                     },
                     "400": {
@@ -1679,60 +2223,13 @@ const docTemplate = `{
                 }
             }
         },
-        "/users/authenticate": {
-            "post": {
-                "description": "Проверяет email и пароль для аутентификации",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Пользователи"
-                ],
-                "summary": "Аутентификация пользователя",
-                "parameters": [
-                    {
-                        "description": "Email и пароль",
-                        "name": "credentials",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Сообщение об успешной аутентификации",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    },
-                    "400": {
-                        "description": "Некорректный запрос",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    },
-                    "401": {
-                        "description": "Неверные учетные данные",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    }
-                }
-            }
-        },
         "/users/{id}": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Возвращает пользователя по ID",
                 "produces": [
                     "application/json"
@@ -1754,7 +2251,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.Users"
+                            "$ref": "#/definitions/models.User"
                         }
                     },
                     "400": {
@@ -1774,6 +2271,11 @@ const docTemplate = `{
                 }
             },
             "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Обновляет данные пользователя",
                 "consumes": [
                     "application/json"
@@ -1799,15 +2301,16 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.Users"
+                            "$ref": "#/definitions/models.User"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Пользователь успешно обновлен",
                         "schema": {
-                            "$ref": "#/definitions/models.Users"
+                            "type": "object",
+                            "additionalProperties": true
                         }
                     },
                     "400": {
@@ -1834,6 +2337,11 @@ const docTemplate = `{
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Удаляет пользователя",
                 "tags": [
                     "Пользователи"
@@ -1850,7 +2358,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Сообщение об успешном удалении",
+                        "description": "Пользователь успешно удален",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
@@ -1875,6 +2383,36 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "handlers.LoginInput": {
+            "type": "object",
+            "required": [
+                "password",
+                "username"
+            ],
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "handlers.RegisterInput": {
+            "type": "object",
+            "required": [
+                "password",
+                "username"
+            ],
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
         "models.Bookings": {
             "type": "object",
             "properties": {
@@ -1882,7 +2420,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "client": {
-                    "$ref": "#/definitions/models.Clients"
+                    "$ref": "#/definitions/models.Client"
                 },
                 "client_id": {
                     "type": "integer"
@@ -1894,7 +2432,7 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "service": {
-                    "$ref": "#/definitions/models.Services"
+                    "$ref": "#/definitions/models.Service"
                 },
                 "service_id": {
                     "type": "integer"
@@ -1906,14 +2444,14 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "user": {
-                    "$ref": "#/definitions/models.Users"
+                    "$ref": "#/definitions/models.User"
                 },
                 "user_id": {
                     "type": "integer"
                 }
             }
         },
-        "models.Breaks": {
+        "models.Break": {
             "type": "object",
             "properties": {
                 "break_end": {
@@ -1931,86 +2469,96 @@ const docTemplate = `{
                 "updated_at": {
                     "type": "string"
                 },
+                "user": {
+                    "$ref": "#/definitions/models.User"
+                },
                 "user_id": {
                     "type": "integer"
                 }
             }
         },
-        "models.Clients": {
+        "models.Client": {
             "type": "object",
             "properties": {
                 "created_at": {
-                    "description": "Created At",
                     "type": "string"
                 },
                 "email": {
-                    "description": "Email",
                     "type": "string"
                 },
                 "first_name": {
-                    "description": "First Name",
                     "type": "string"
                 },
                 "id": {
-                    "description": "ID",
                     "type": "integer"
                 },
                 "last_name": {
-                    "description": "Last Name",
                     "type": "string"
                 },
                 "phone_number": {
-                    "description": "Phone Number",
                     "type": "string"
                 },
                 "tg_id": {
-                    "description": "Telegram ID",
                     "type": "integer"
                 },
                 "tg_nickname": {
-                    "description": "Telegram Nickname",
                     "type": "string"
                 },
                 "updated_at": {
-                    "description": "Updated At",
                     "type": "string"
                 }
             }
         },
-        "models.Schedules": {
+        "models.Notification": {
+            "type": "object",
+            "properties": {
+                "client_id": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "notification_type": {
+                    "type": "string"
+                },
+                "sent_at": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Schedule": {
             "type": "object",
             "properties": {
                 "created_at": {
-                    "description": "Дата создания",
                     "type": "string"
                 },
                 "end_time": {
-                    "description": "Время окончания рабочего дня",
                     "type": "string"
                 },
                 "id": {
-                    "description": "Уникальный идентификатор расписания",
                     "type": "integer"
                 },
                 "schedule_day": {
-                    "description": "День недели (например, понедельник)",
                     "type": "string"
                 },
                 "start_time": {
-                    "description": "Время начала рабочего дня",
                     "type": "string"
                 },
                 "updated_at": {
-                    "description": "Дата последнего обновления",
                     "type": "string"
                 },
                 "user_id": {
-                    "description": "Ссылка на сотрудника",
                     "type": "integer"
                 }
             }
         },
-        "models.Services": {
+        "models.Service": {
             "type": "object",
             "properties": {
                 "created_at": {
@@ -2020,6 +2568,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "duration": {
+                    "description": "Продолжительность в минутах",
                     "type": "integer"
                 },
                 "id": {
@@ -2039,7 +2588,7 @@ const docTemplate = `{
                 }
             }
         },
-        "models.Users": {
+        "models.User": {
             "type": "object",
             "properties": {
                 "created_at": {
@@ -2052,9 +2601,6 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "last_login_at": {
-                    "type": "string"
-                },
-                "password_hash": {
                     "type": "string"
                 },
                 "phone_number": {
@@ -2071,6 +2617,13 @@ const docTemplate = `{
                 }
             }
         }
+    },
+    "securityDefinitions": {
+        "BearerAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
     }
 }`
 
@@ -2078,7 +2631,7 @@ const docTemplate = `{
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
 	Host:             "localhost:8080",
-	BasePath:         "/",
+	BasePath:         "/api",
 	Schemes:          []string{},
 	Title:            "GoGRAFF API",
 	Description:      "API для управления GoGRAFF",

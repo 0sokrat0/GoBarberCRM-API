@@ -1,9 +1,9 @@
 package db
 
 import (
+	"github.com/0sokrat0/GoGRAFFApi.git/app/internal/models"
 	"log"
 
-	"github.com/0sokrat0/GoGRAFFApi.git/app/pkg/db/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -22,13 +22,14 @@ func InitDB(dsn string) error {
 	// Выполняем миграции
 	err = DB.AutoMigrate(
 		&models.Bookings{},
-		&models.Users{},
-		&models.Clients{},
-		&models.Schedules{},
-		&models.Services{},
+		&models.User{},
+		&models.Client{},
+		&models.Schedule{},
+		&models.Service{},
 		&models.HistoryLogs{},
-		&models.Notifications{},
-		&models.Breaks{},
+		&models.Notification{},
+		&models.Break{},
+		&models.AuthUser{},
 	)
 	if err != nil {
 		return err

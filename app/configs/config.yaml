@@ -2,6 +2,7 @@ app:
   name: "GoBarberCRM API"
   environment: "development"
   port: 8080
+  jwt_secret: "Graffsecretapi"
 
 database:
   host: "localhost"
@@ -10,3 +11,4 @@ database:
   password: "3215"
   name: "GoBarberCRM"
   sslmode: "disable"
+
